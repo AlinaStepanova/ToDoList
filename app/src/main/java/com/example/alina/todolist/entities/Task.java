@@ -22,6 +22,7 @@ public class Task extends TaskObject {
     private Date expireDate;
 
     private ArrayList<SubTask> subTasksList;
+
     public Task() {
         expireDate = new Date();
         subTasksList = new ArrayList<>();
@@ -33,10 +34,6 @@ public class Task extends TaskObject {
 
     public String getName() {
         return name;
-    }
-
-    public boolean isExpire(Date date) {
-        return expireDate.compareTo(date) < 1;
     }
 
     public boolean isExpire() {
@@ -75,13 +72,13 @@ public class Task extends TaskObject {
         this.name = name;
     }
 
-    /*public ArrayList<SubTask> getSubTasks() {
-        return subTasks;
+    public ArrayList<SubTask> getSubTasks() {
+        return subTasksList;
     }
 
     public void setSubTasks(ArrayList<SubTask> subTasks) {
-        this.subTasks = subTasks;
-    }*/
+        this.subTasksList = subTasks;
+    }
 
     @Override
     public boolean isDone() {
@@ -93,7 +90,7 @@ public class Task extends TaskObject {
         super.writeToParcel(dest, flags);
         dest.writeString(this.name);
         dest.writeLong(this.expireDate != null ? this.expireDate.getTime() : -1);
-        //dest.writeTypedList(this.subTasksList);
+        dest.writeTypedList(this.subTasksList);
     }
 
     protected Task(Parcel in) {
@@ -101,7 +98,7 @@ public class Task extends TaskObject {
         this.name = in.readString();
         long tmpExpireDate = in.readLong();
         this.expireDate = tmpExpireDate == -1 ? null : new Date(tmpExpireDate);
-        //this.subTasksList = in.createTypedArrayList(SubTask.CREATOR);
+        this.subTasksList = in.createTypedArrayList(SubTask.CREATOR);
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {

@@ -2,6 +2,7 @@ package com.example.alina.todolist.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,21 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Task> tasks;
+    public interface OnItemClickListener {
+        void onItemClick(Task task);
+    }
 
-    public TaskAdapter(@NonNull List<Task> tasks) {
+    private List<Task> tasks;
+    private OnItemClickListener onItemClickListener;
+
+    public TaskAdapter(@NonNull List<Task> tasks, OnItemClickListener onItemClickListener) {
         super();
         this.tasks = tasks;
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public List<Task> getData() {
+        return tasks;
     }
 
     @Override
@@ -52,10 +63,10 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof TaskViewHolderRunning) {
             TaskViewHolderRunning running = (TaskViewHolderRunning) holder;
-            running.bind(tasks.get(position));
+            running.bind(tasks.get(position), onItemClickListener);
         } else if(holder instanceof TaskViewHolderFinished){
             TaskViewHolderFinished finished = (TaskViewHolderFinished) holder;
-            finished.bind(tasks.get(position));
+            finished.bind(tasks.get(position), onItemClickListener);
         }
     }
 
@@ -69,6 +80,12 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyItemInserted(tasks.size() - 1);
     }
 
+    public void update(Task task) {
+        int position = tasks.indexOf(task);
+        tasks.set(position, task);
+        notifyItemChanged(position);
+    }
+
     private class TaskViewHolderRunning extends RecyclerView.ViewHolder {
 
         TextView name;
@@ -80,9 +97,15 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             description = (TextView) itemView.findViewById(R.id.descriptionTextView);
         }
 
-        void bind(Task task) {
+        void bind(final Task task, final OnItemClickListener onItemClickListener) {
             name.setText(task.getName());
             description.setText(task.getDescription());
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick(task);
+                }
+            });
         }
     }
 
@@ -97,9 +120,15 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             description = (TextView) itemView.findViewById(R.id.descriptionTextViewFinished);
         }
 
-        void bind(Task task) {
+        void bind(final Task task, final OnItemClickListener onItemClickListener) {
             name.setText(task.getName());
             description.setText(task.getDescription());
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick(task);
+                }
+            });
         }
     }
 }
