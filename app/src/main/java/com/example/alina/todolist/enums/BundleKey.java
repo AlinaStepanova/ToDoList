@@ -5,5 +5,6 @@ package com.example.alina.todolist.enums;
  */
 
 public enum BundleKey {
-    TASK
+    TASK,
+    SUBTASK
 }

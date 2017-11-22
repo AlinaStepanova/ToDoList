@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_create_task"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -51,16 +52,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="showDatePickerDialog">
-
         <TextView
             android:id="@+id/dateTextView"
             style="@style/text_view_style"
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_event_black_24dp"
             tools:text="11-11-2017"/>
-
         <View
             style="@style/Divider"
             />
-    </LinearLayout>
+        </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/createSubTaskButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/max_margin"
+            android:layout_marginEnd="@dimen/max_margin"
+            android:layout_weight="1"
+            android:clickable="true"
+            app:fabSize="normal"
+            app:srcCompat="@android:drawable/ic_input_add"/>
+    </FrameLayout>
 </LinearLayout>

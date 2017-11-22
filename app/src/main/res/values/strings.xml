@@ -6,4 +6,6 @@
     <string name="text_description_view">TextDescriptionView</string>
     <string name="text_name_view">TextNameView</string>
     <string name="change_layout">change_layout</string>
+    <string name="subtask_description">SubTask description</string>
+    <string name="subtask_status">SubTask status</string>
 </resources>

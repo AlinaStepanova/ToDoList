@@ -2,8 +2,10 @@ package com.example.alina.todolist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,14 +15,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.DatePickerFragment;
+import com.example.alina.todolist.fragments.AddSubTaskDialogFragment;
 import com.example.alina.todolist.validators.Validator;
 
 import java.util.Date;
 
-public class CreateTaskActivity extends AppCompatActivity implements DatePickerFragment.OnDateSelectedListener {
+public class CreateTaskActivity extends AppCompatActivity implements
+        DatePickerFragment.OnDateSelectedListener, AddSubTaskDialogFragment.CreateSubTaskDialogListener{
 
     private Task task;
     private TextInputLayout nameWrapper;
@@ -28,6 +33,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerF
     private TextInputLayout descriptionWrapper;
     private EditText descriptionEditText;
     private TextView dateTextView;
+    private FloatingActionButton createSubTaskButton;
     private Validator stringValidator = new Validator.StringValidatorBuilder()
             .setNotEmpty()
             .setMinLength(2)
@@ -47,6 +53,12 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerF
             Toast.makeText(getApplicationContext(), "Task not found", Toast.LENGTH_LONG).show();
             finish();
         }
+        initCreateTaskButton();
+    }
+
+    @Override
+    public void onFinishSubTask(String inputText) {
+        Toast.makeText(this, "Description is " + inputText, Toast.LENGTH_SHORT).show();
     }
 
     private void initUI() {
@@ -66,6 +78,22 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerF
     private void fillData() {
         task.setName(nameEditText.getText().toString());
         task.setDescription(descriptionEditText.getText().toString());
+    }
+
+    private void showEditDialog() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        AddSubTaskDialogFragment subTaskDialogFragment = AddSubTaskDialogFragment.newInstance("SubTask dialog");
+        subTaskDialogFragment.show(fragmentManager, fragmentManager.getClass().getSimpleName());
+    }
+
+    private void initCreateTaskButton() {
+        createSubTaskButton = (FloatingActionButton) findViewById(R.id.createSubTaskButton);
+        createSubTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditDialog();
+            }
+        });
     }
 
     @Override

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/descriptionSubTaskWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/min_margin"
+        android:layout_marginLeft="@dimen/min_margin"
+        android:layout_marginRight="@dimen/min_margin"
+        android:layout_marginStart="@dimen/min_margin"
+        android:layout_marginTop="@dimen/min_margin">
+
+        <EditText
+            android:id="@+id/descriptionSubTaskText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/subtask_description"
+            android:inputType="textMultiLine"
+            android:maxLength="@integer/max_length"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.SwitchCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:textOn="New"
+        android:textOff="Done"
+        android:hint="@string/subtask_status"
+        android:id="@+id/subTaskSwitcher"/>
+
+</LinearLayout>
