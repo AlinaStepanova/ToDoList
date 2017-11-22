@@ -31,7 +31,7 @@
     </style>
 
     <style name="ItemTaskLayout">
-        <item name="android:background">?attr/textColorLarge</item>
+        <item name="android:background">?attr/layoutBackGroundColor</item>
     </style>
 
     <style name="Divider">
