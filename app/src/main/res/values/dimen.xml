@@ -5,5 +5,5 @@
    <dimen name="mid_margin">16dip</dimen>
    <dimen name="max_margin">32dip</dimen>
    <integer name="max_length">1024</integer>
-   <dimen name="divider_height">2dip</dimen>
+   <dimen name="divider_height">1dip</dimen>
 </resources>

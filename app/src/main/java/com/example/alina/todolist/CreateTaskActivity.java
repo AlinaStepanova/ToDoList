@@ -41,7 +41,7 @@ public class CreateTaskActivity extends AppCompatActivity implements
     private FloatingActionButton createSubTaskButton;
     private Validator stringValidator = new Validator.StringValidatorBuilder()
             .setNotEmpty()
-            .setMinLength(2)
+            .setMinLength(3)
             .build();
 
     private RecyclerView subTaskRecycler;

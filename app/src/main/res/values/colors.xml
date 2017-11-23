@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorDescriptionBlack">#000</color>
-    <color name="colorBackGroundItem">#d7ccc8</color>
+    <color name="colorBackGroundItem">#e3f2fd</color>
     <color name="colorIconDate">#696969</color>
     <color name="ExpiredTaskColor">#f44336</color>
     <color name="ExpiredTaskColorBackground">#ffcdd2</color>
