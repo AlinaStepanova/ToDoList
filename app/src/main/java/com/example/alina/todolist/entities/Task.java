@@ -8,6 +8,7 @@ import com.example.alina.todolist.validators.Constants;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +22,7 @@ public class Task extends TaskObject {
 
     private Date expireDate;
 
-    private ArrayList<SubTask> subTasksList;
+    private List<SubTask> subTasksList;
 
     public Task() {
         expireDate = new Date();
@@ -72,11 +73,11 @@ public class Task extends TaskObject {
         this.name = name;
     }
 
-    public ArrayList<SubTask> getSubTasks() {
+    public List<SubTask> getSubTasks() {
         return subTasksList;
     }
 
-    public void setSubTasks(ArrayList<SubTask> subTasks) {
+    public void setSubTasks(List<SubTask> subTasks) {
         this.subTasksList = subTasks;
     }
 

@@ -2,15 +2,17 @@ package com.example.alina.todolist.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+
 import com.example.alina.todolist.entities.Task;
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Alina on 14.11.2017.
@@ -18,57 +20,62 @@ import java.util.ArrayList;
 
 public class SharedPreferencesDataSource implements IDataSource {
 
-    private static final String NEW_TASK = "NewTask";
+    private static final String PREF_NAME = "SharedPrefDataSource";
+    private static final String KEY_TASK = "KEY_TASK";
 
-    private static SharedPreferences sharedPreferences;
+    private SharedPreferences preferences;
+    private GsonBuilder gsonBuilder;
+    private Type taskListType;
+    private ArrayList<Task> taskList;
 
-    private static SharedPreferences.Editor editor;
-
-    private static ArrayList<Task> tasks = new ArrayList<>();
-
-    private Gson gson;
-
-    private String jsonPreferences;
-
-    public SharedPreferencesDataSource(Context context) {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        editor = sharedPreferences.edit();
-        gson = new Gson();
-        jsonPreferences = sharedPreferences.getString(NEW_TASK, null);
+    public SharedPreferencesDataSource(Context context){
+        if (context != null) {
+            preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+            gsonBuilder = new GsonBuilder();
+            taskListType = new TypeToken<ArrayList<Task>>(){}.getType();
+            if (!isTaskListEmpty()){
+                taskList = convertJsonToList(preferences.getString(KEY_TASK, ""));
+            } else {
+                taskList = new ArrayList<>();
+            }
+        }
     }
 
     @Override
     public ArrayList<Task> getTaskList() {
-        Type type = new TypeToken<ArrayList<Task>>(){}.getType();
-        return gson.fromJson(jsonPreferences, type);
+        return taskList;
     }
 
     @Override
     public boolean createTask(@NonNull Task task) {
-        tasks = getTaskList();
-        tasks.add(task);
-        return setList(NEW_TASK, tasks);
+        boolean result;
+        result = taskList.add(task);
+        preferences.edit().putString(KEY_TASK, convertTaskListToJson(taskList)).apply();
+        return result;
     }
 
     @Override
-    public boolean updateTask(@NonNull Task task, @IntRange(from = 0, to = Integer.MAX_VALUE)
-            int index) {
+    public boolean updateTask(@NonNull Task task, @IntRange(from = 0, to = Integer.MAX_VALUE) int index) {
         boolean result = false;
-        if (index >= 0 && index < tasks.size()) {
-            tasks.set(index, task);
-            setList(NEW_TASK, tasks);
+
+        if (index >= 0 && index < taskList.size()) {
+            taskList.set(index, task);
+            preferences.edit().putString(KEY_TASK, convertTaskListToJson(taskList)).apply();
             result = true;
         }
         return result;
     }
 
-    private boolean setList(String key, ArrayList<Task> list) {
-        String json = gson.toJson(list);
-        return set(key, json);
+    private String convertTaskListToJson(List<Task> task){
+        return gsonBuilder.create().toJson(task, taskListType);
     }
 
-    private boolean set(String key, String value) {
-        editor.putString(key, value);
-        return editor.commit();
+    private ArrayList<Task> convertJsonToList(String json){
+        return gsonBuilder.create().fromJson(json, taskListType);
     }
+
+    private boolean isTaskListEmpty(){
+        return TextUtils.isEmpty(preferences.getString(KEY_TASK, ""));
+    }
+
 }

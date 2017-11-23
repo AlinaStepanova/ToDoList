@@ -8,14 +8,19 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.alina.todolist.adapters.SubTaskAdapter;
+import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.DatePickerFragment;
@@ -39,6 +44,10 @@ public class CreateTaskActivity extends AppCompatActivity implements
             .setMinLength(2)
             .build();
 
+    private RecyclerView subTaskRecycler;
+    private SubTaskAdapter subTaskAdapter;
+    private LinearLayout taskDateLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +62,17 @@ public class CreateTaskActivity extends AppCompatActivity implements
             Toast.makeText(getApplicationContext(), "Task not found", Toast.LENGTH_LONG).show();
             finish();
         }
+        initDatePickerClick();
+
+        initSubTaskRecycler();
+
         initCreateTaskButton();
+
     }
 
     @Override
-    public void onFinishSubTask(String inputText) {
-        Toast.makeText(this, "Description is " + inputText, Toast.LENGTH_SHORT).show();
+    public void onFinishSubTask(SubTask subTask) {
+        subTaskAdapter.addNewSubTask(subTask);
     }
 
     private void initUI() {
@@ -67,6 +81,8 @@ public class CreateTaskActivity extends AppCompatActivity implements
         dateTextView = (TextView) findViewById(R.id.dateTextView);
         descriptionWrapper = (TextInputLayout) findViewById(R.id.descriptionWrapper);
         descriptionEditText = (EditText) findViewById(R.id.descriptionText);
+        subTaskRecycler = (RecyclerView) findViewById(R.id.subTaskRecycler);
+        taskDateLayout = (LinearLayout) findViewById(R.id.taskDateLayout);
     }
 
     private void setData() {
@@ -84,6 +100,24 @@ public class CreateTaskActivity extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         AddSubTaskDialogFragment subTaskDialogFragment = AddSubTaskDialogFragment.newInstance("SubTask dialog");
         subTaskDialogFragment.show(fragmentManager, fragmentManager.getClass().getSimpleName());
+    }
+
+    private void initDatePickerClick(){
+        taskDateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
+    }
+
+    private void initSubTaskRecycler(){
+        subTaskAdapter = new SubTaskAdapter();
+        subTaskRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        subTaskRecycler.setAdapter(subTaskAdapter);
+        if (task.getSubTasks().size() != 0){
+            subTaskAdapter.addAllSubTask(task.getSubTasks());
+        }
     }
 
     private void initCreateTaskButton() {
@@ -117,6 +151,7 @@ public class CreateTaskActivity extends AppCompatActivity implements
     private void saveTask() {
         if (validate(nameWrapper) && validate(descriptionWrapper)) {
             fillData();
+            task.setSubTasks(subTaskAdapter.getSubTaskList());
             Intent result = new Intent();
             result.putExtra(BundleKey.TASK.name(), task);
             setResult(Activity.RESULT_OK, result);
@@ -135,7 +170,7 @@ public class CreateTaskActivity extends AppCompatActivity implements
         return result;
     }
 
-    public void showDatePickerDialog(View v) {
+    public void showDatePickerDialog() {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }

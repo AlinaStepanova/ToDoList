@@ -8,4 +8,5 @@
     <string name="change_layout">change_layout</string>
     <string name="subtask_description">SubTask description</string>
     <string name="subtask_status">SubTask status</string>
+    <string name="task_status">Task status</string>
 </resources>
