@@ -34,19 +34,18 @@ public class CreateTaskActivity extends AppCompatActivity implements
 
     private Task task;
     private TextInputLayout nameWrapper;
-    private EditText nameEditText;
     private TextInputLayout descriptionWrapper;
+    private EditText nameEditText;
     private EditText descriptionEditText;
     private TextView dateTextView;
     private FloatingActionButton createSubTaskButton;
+    private RecyclerView subTaskRecycler;
+    private SubTaskAdapter subTaskAdapter;
+    private LinearLayout taskDateLayout;
     private Validator stringValidator = new Validator.StringValidatorBuilder()
             .setNotEmpty()
             .setMinLength(3)
             .build();
-
-    private RecyclerView subTaskRecycler;
-    private SubTaskAdapter subTaskAdapter;
-    private LinearLayout taskDateLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +62,8 @@ public class CreateTaskActivity extends AppCompatActivity implements
             finish();
         }
         initDatePickerClick();
-
         initSubTaskRecycler();
-
         initCreateTaskButton();
-
     }
 
     @Override

@@ -20,6 +20,7 @@ import java.util.List;
  */
 
 public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.SubTaskHolder> {
+
     private List<SubTask> subTaskList;
 
     public SubTaskAdapter(){
@@ -57,7 +58,8 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.SubTaskH
         return subTaskList;
     }
 
-    class SubTaskHolder extends RecyclerView.ViewHolder{
+    class SubTaskHolder extends RecyclerView.ViewHolder {
+
         private TextView subTaskDescription;
         private SwitchCompat subTaskStatusSwitcher;
 
@@ -70,7 +72,6 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.SubTaskH
         void onBind(final SubTask subTask){
             subTaskDescription.setText(subTask.getDescription());
             subTaskStatusSwitcher.setChecked(subTask.isDone());
-
             subTaskStatusSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
