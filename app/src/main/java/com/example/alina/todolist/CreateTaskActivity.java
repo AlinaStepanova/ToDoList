@@ -8,12 +8,16 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.ActionMenuItemView;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +26,7 @@ import android.widget.Toast;
 import com.example.alina.todolist.adapters.SubTaskAdapter;
 import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.entities.Task;
+import com.example.alina.todolist.entities.TaskObject;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.DatePickerFragment;
 import com.example.alina.todolist.fragments.AddSubTaskDialogFragment;
@@ -38,10 +43,10 @@ public class CreateTaskActivity extends AppCompatActivity implements
     private EditText nameEditText;
     private EditText descriptionEditText;
     private TextView dateTextView;
-    private FloatingActionButton createSubTaskButton;
     private RecyclerView subTaskRecycler;
     private SubTaskAdapter subTaskAdapter;
     private LinearLayout taskDateLayout;
+    private Menu menu;
     private Validator stringValidator = new Validator.StringValidatorBuilder()
             .setNotEmpty()
             .setMinLength(3)
@@ -64,11 +69,6 @@ public class CreateTaskActivity extends AppCompatActivity implements
         initDatePickerClick();
         initSubTaskRecycler();
         initCreateTaskButton();
-    }
-
-    @Override
-    public void onFinishSubTask(SubTask subTask) {
-        subTaskAdapter.addNewSubTask(subTask);
     }
 
     private void initUI() {
@@ -107,9 +107,15 @@ public class CreateTaskActivity extends AppCompatActivity implements
         });
     }
 
+    @Override
+    public void onFinishSubTask(SubTask subTask) {
+        subTaskAdapter.addNewSubTask(subTask);
+    }
+
     private void initSubTaskRecycler(){
         subTaskAdapter = new SubTaskAdapter();
-        subTaskRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        subTaskRecycler.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL, false));
         subTaskRecycler.setAdapter(subTaskAdapter);
         if (task.getSubTasks().size() != 0){
             subTaskAdapter.addAllSubTask(task.getSubTasks());
@@ -117,7 +123,8 @@ public class CreateTaskActivity extends AppCompatActivity implements
     }
 
     private void initCreateTaskButton() {
-        createSubTaskButton = (FloatingActionButton) findViewById(R.id.createSubTaskButton);
+        FloatingActionButton createSubTaskButton = (FloatingActionButton)
+                findViewById(R.id.createSubTaskButton);
         createSubTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +137,17 @@ public class CreateTaskActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu (Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.task_editor, menu);
+        MenuItem doneItem = menu.findItem(R.id.item_done_task);
+        MenuItem saveItem = menu.findItem(R.id.item_save);
+        if (task.isDone()) {
+            doneItem.setTitle(getString(R.string.undone_task));
+            saveItem.setEnabled(false);
+        }
+        if (!task.isDone()) {
+            doneItem.setTitle(getString(R.string.done_task));
+            saveItem.setEnabled(true);
+        }
+        this.menu = menu;
         return true;
     }
 
@@ -139,8 +157,24 @@ public class CreateTaskActivity extends AppCompatActivity implements
             case R.id.item_save:
                 saveTask();
                 return true;
+            case R.id.item_done_task:
+                setTaskDone();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setTaskDone() {
+        if (task.getStatus() == TaskObject.TaskStatus.DONE) {
+            task.setStatus(TaskObject.TaskStatus.NEW);
+            saveTask();
+        }
+        if (task.isAllSubTasksDone() && task.getStatus() == TaskObject.TaskStatus.NEW) {
+            task.setStatus(TaskObject.TaskStatus.DONE);
+            saveTask();
+        } else {
+            Toast.makeText(this, "All SubTasks must be done!", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -77,4 +77,13 @@ public abstract class TaskObject implements Parcelable {
     public int hashCode() {
         return uuid != null ? uuid.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "TaskObject{" +
+                "uuid='" + uuid + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

@@ -29,18 +29,30 @@ public class Task extends TaskObject {
         subTasksList = new ArrayList<>();
     }
 
-    public String getExpireDateString() {
-        return Constants.DATE_FORMAT.format(expireDate);
+    public List<SubTask> getSubTasks() {
+        return subTasksList;
     }
 
-    public String getName() {
-        return name;
+    public void setExpireDate(Date expireDate) {
+        this.expireDate = expireDate;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSubTasks(List<SubTask> subTasks) {
+        this.subTasksList = subTasks;
     }
 
     public boolean isExpire() {
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
         return expireDate.compareTo(date) < 1;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getLeftTime() {
@@ -65,20 +77,18 @@ public class Task extends TaskObject {
         return result;
     }
 
-    public void setExpireDate(Date expireDate) {
-        this.expireDate = expireDate;
+    public String getExpireDateString() {
+        return Constants.DATE_FORMAT.format(expireDate);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<SubTask> getSubTasks() {
-        return subTasksList;
-    }
-
-    public void setSubTasks(List<SubTask> subTasks) {
-        this.subTasksList = subTasks;
+    public boolean isAllSubTasksDone() {
+        int count = 0;
+        for (SubTask subTask : subTasksList) {
+            if (subTask.isDone()) {
+                ++count;
+            }
+        }
+        return count == getSubTasks().size();
     }
 
     @Override
@@ -113,4 +123,13 @@ public class Task extends TaskObject {
             return new Task[0];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", expireDate=" + expireDate +
+                ", subTasksList=" + subTasksList + " " + getStatus().toString() + " " +
+                '}';
+    }
 }

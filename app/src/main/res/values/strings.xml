@@ -9,4 +9,6 @@
     <string name="subtask_description">SubTask description</string>
     <string name="subtask_status">SubTask status</string>
     <string name="task_status">Task status</string>
+    <string name="done_task">DONE</string>
+    <string name="undone_task">UNDONE</string>
 </resources>
