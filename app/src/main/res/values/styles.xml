@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
@@ -16,8 +16,8 @@
 
     <style name="Item.Expired" parent="AppTheme">
         <item name="layoutBackGroundColor">#ffeb3b</item>
-        <item name="textColorSmall">@color/ExpiredTaskColor</item>
-        <item name="textColorLarge">@color/ExpiredTaskColorBackground</item>
+        <item name="textColorSmall">@color/colorExpiredTaskColor</item>
+        <item name="textColorLarge">@color/colorExpiredTaskColorBackground</item>
     </style>
 
     <style name="ItemTextViewSmall">
@@ -39,6 +39,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_marginLeft">@dimen/min_margin</item>
         <item name="android:layout_marginRight">@dimen/min_margin</item>
+        <item name="android:layout_marginBottom">@dimen/min_margin</item>
         <item name="android:background">@color/colorIconDate</item>
     </style>
 

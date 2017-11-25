@@ -55,7 +55,8 @@ public class SharedPreferencesDataSource implements IDataSource {
     }
 
     @Override
-    public boolean updateTask(@NonNull Task task, @IntRange(from = 0, to = Integer.MAX_VALUE) int index) {
+    public boolean updateTask(@NonNull Task task, @IntRange(from = 0,
+            to = Integer.MAX_VALUE) int index) {
         boolean result = false;
 
         if (index >= 0 && index < taskList.size()) {

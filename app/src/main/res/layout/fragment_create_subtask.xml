@@ -8,7 +8,12 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/descriptionSubTaskWrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/min_margin"
+        android:layout_marginLeft="@dimen/min_margin"
+        android:layout_marginRight="@dimen/min_margin"
+        android:layout_marginStart="@dimen/min_margin"
+        android:layout_marginTop="@dimen/min_margin">
 
         <EditText
             android:id="@+id/descriptionSubTaskText"
@@ -25,24 +30,5 @@
         android:text="@android:string/ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/buttonOK"
-            android:text="@string/button_ok"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/buttonCancel"
-            android:text="@string/button_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/buttonOK"/>
-    </RelativeLayout>
-
 
 </LinearLayout>

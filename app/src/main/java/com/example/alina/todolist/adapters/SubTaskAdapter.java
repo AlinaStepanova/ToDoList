@@ -39,7 +39,8 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.SubTaskH
 
     @Override
     public SubTaskHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SubTaskHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sub_task, parent, false));
+        return new SubTaskHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_sub_task, parent, false));
     }
 
     @Override
