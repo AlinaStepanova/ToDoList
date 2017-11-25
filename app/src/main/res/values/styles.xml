@@ -34,13 +34,13 @@
         <item name="android:background">?attr/layoutBackGroundColor</item>
     </style>
 
-    <style name="Divider">
+    <style name="divider">
         <item name="android:layout_height">@dimen/divider_height</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/min_margin</item>
-        <item name="android:layout_marginRight">@dimen/min_margin</item>
-        <item name="android:layout_marginBottom">@dimen/min_margin</item>
-        <item name="android:background">@color/colorIconDate</item>
+        <item name="android:layout_marginLeft">@dimen/divider_margin</item>
+        <item name="android:layout_marginRight">@dimen/divider_margin</item>
+        <item name="android:layout_marginBottom">@dimen/mid_margin</item>
+        <item name="android:background">@color/colorPrimaryWhite</item>
     </style>
 
     <style name="date_style">
@@ -64,12 +64,16 @@
         <item name="android:background">@color/colorAccent</item>
     </style>
 
-    <style name="ItemLayout.White" parent="date_style">
+    <style name="ItemLayout.Black" parent="date_style">
         <item name="android:textColor">@color/colorDescriptionBlack</item>
     </style>
 
-    <style name="ItemLayout.White.Large" parent="date_style">
-        <item name="android:textAppearance">@android:style/TextAppearance.Material.Large</item>
+    <style name="ItemLayout.Black.Medium" parent="date_style">
+        <item name="android:textColor">@color/colorDescriptionBlack</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Material.Medium</item>
     </style>
 
+    <style name="ItemLayout.Black.Large" parent="date_style">
+        <item name="android:textAppearance">@android:style/TextAppearance.Material.Large</item>
+    </style>
 </resources>
