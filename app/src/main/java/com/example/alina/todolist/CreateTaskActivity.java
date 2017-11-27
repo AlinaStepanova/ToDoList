@@ -48,12 +48,10 @@ public class CreateTaskActivity extends AppCompatActivity implements
     private RecyclerView subTaskRecycler;
     private SubTaskAdapter subTaskAdapter;
     private LinearLayout taskDateLayout;
-    private Menu menu;
     private Validator stringValidator = new Validator.StringValidatorBuilder()
             .setNotEmpty()
             .setMinLength(3)
             .build();
-    private ItemTouchHelper itemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +123,7 @@ public class CreateTaskActivity extends AppCompatActivity implements
         }
 
         ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(subTaskAdapter);
-        itemTouchHelper = new ItemTouchHelper(callback);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(subTaskRecycler);
     }
 
@@ -144,17 +142,8 @@ public class CreateTaskActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu (Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.task_editor, menu);
-        MenuItem doneItem = menu.findItem(R.id.item_done_task);
-        MenuItem saveItem = menu.findItem(R.id.item_save);
-        if (task.isDone()) {
-            doneItem.setTitle(getString(R.string.undone_task));
-            saveItem.setEnabled(false);
-        }
-        if (!task.isDone()) {
-            doneItem.setTitle(getString(R.string.done_task));
-            saveItem.setEnabled(true);
-        }
-        this.menu = menu;
+        menu.findItem(R.id.item_done_task).setTitle(task.isDone() ?
+                R.string.undone_task : R.string.done_task);
         return true;
     }
 
@@ -177,7 +166,7 @@ public class CreateTaskActivity extends AppCompatActivity implements
             task.setStatus(TaskObject.TaskStatus.NEW);
             saveTask();
         }
-        if (task.isAllSubTasksDone() && task.getStatus() == TaskObject.TaskStatus.NEW) {
+        else if (task.isAllSubTasksDone() || task.getSubTasks().size() == 0) {
             task.setStatus(TaskObject.TaskStatus.DONE);
             saveTask();
         } else {
@@ -199,9 +188,8 @@ public class CreateTaskActivity extends AppCompatActivity implements
 
     private String getRootTaskStatus(){
         String status;
-        if (task.isAllSubTasksDone()){
+        if (task.isAllSubTasksDone() || task.isDone()){
             status = TaskState.DONE.name();
-            task.setStatus(TaskObject.TaskStatus.DONE);
         }
         else if (task.isExpire())
             status = TaskState.EXPIRED.name();
