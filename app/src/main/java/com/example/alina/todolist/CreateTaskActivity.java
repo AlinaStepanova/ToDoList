@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.alina.todolist.adapters.ItemTouchHelperCallback;
 import com.example.alina.todolist.adapters.SubTaskAdapter;
 import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.entities.Task;
@@ -32,7 +35,9 @@ import com.example.alina.todolist.validators.Validator;
 import java.util.Date;
 
 public class CreateTaskActivity extends AppCompatActivity implements
-        DatePickerFragment.OnDateSelectedListener, AddSubTaskDialogFragment.CreateSubTaskDialogListener{
+        DatePickerFragment.OnDateSelectedListener,
+        AddSubTaskDialogFragment.CreateSubTaskDialogListener,
+        SubTaskAdapter.ItemSwipeCallback{
 
     private Task task;
     private TextInputLayout nameWrapper;
@@ -48,6 +53,7 @@ public class CreateTaskActivity extends AppCompatActivity implements
             .setNotEmpty()
             .setMinLength(3)
             .build();
+    private ItemTouchHelper itemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,13 +116,17 @@ public class CreateTaskActivity extends AppCompatActivity implements
     }
 
     private void initSubTaskRecycler(){
-        subTaskAdapter = new SubTaskAdapter();
+        subTaskAdapter = new SubTaskAdapter(this);
         subTaskRecycler.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
         subTaskRecycler.setAdapter(subTaskAdapter);
         if (task.getSubTasks().size() != 0){
             subTaskAdapter.addAllSubTask(task.getSubTasks());
         }
+
+        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(subTaskAdapter);
+        itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(subTaskRecycler);
     }
 
     private void initCreateTaskButton() {
@@ -221,5 +231,20 @@ public class CreateTaskActivity extends AppCompatActivity implements
         dateTextView = (TextView) findViewById(R.id.dateTextView);
         task.setExpireDate(date);
         dateTextView.setText(task.getExpireDateString());
+    }
+
+    @Override
+    public void onItemRemoved() {
+        showUndoSnackBar();
+    }
+
+    private void showUndoSnackBar(){
+        Snackbar.make(findViewById(R.id.activity_create_task), R.string.sub_task_deleted, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        subTaskAdapter.restoreRemovedItem();
+                    }
+                }).show();
     }
 }

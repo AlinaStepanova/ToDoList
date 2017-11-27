@@ -11,4 +11,7 @@
     <string name="task_status">Task status</string>
     <string name="done_task">DONE</string>
     <string name="undone_task">UNDONE</string>
+
+    <string name="undo">UNDO</string>
+    <string name="sub_task_deleted">SubTask deleted</string>
 </resources>
