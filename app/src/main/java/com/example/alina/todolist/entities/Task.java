@@ -88,7 +88,7 @@ public class Task extends TaskObject {
                 ++count;
             }
         }
-        return count == getSubTasks().size();
+        return count != 0 && count == getSubTasks().size();
     }
 
     @Override

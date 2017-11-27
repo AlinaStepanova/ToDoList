@@ -2,22 +2,18 @@ package com.example.alina.todolist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.view.menu.ActionMenuItemView;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,8 +24,9 @@ import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.entities.TaskObject;
 import com.example.alina.todolist.enums.BundleKey;
-import com.example.alina.todolist.fragments.DatePickerFragment;
+import com.example.alina.todolist.enums.TaskState;
 import com.example.alina.todolist.fragments.AddSubTaskDialogFragment;
+import com.example.alina.todolist.fragments.DatePickerFragment;
 import com.example.alina.todolist.validators.Validator;
 
 import java.util.Date;
@@ -184,9 +181,23 @@ public class CreateTaskActivity extends AppCompatActivity implements
             task.setSubTasks(subTaskAdapter.getSubTaskList());
             Intent result = new Intent();
             result.putExtra(BundleKey.TASK.name(), task);
+            result.putExtra(BundleKey.TASK_STATUS.name(), getRootTaskStatus());
             setResult(Activity.RESULT_OK, result);
             finish();
         }
+    }
+
+    private String getRootTaskStatus(){
+        String status;
+        if (task.isAllSubTasksDone()){
+            status = TaskState.DONE.name();
+            task.setStatus(TaskObject.TaskStatus.DONE);
+        }
+        else if (task.isExpire())
+            status = TaskState.EXPIRED.name();
+        else status = TaskState.ALL.name();
+
+        return status;
     }
 
     private boolean validate(TextInputLayout wrapper) {

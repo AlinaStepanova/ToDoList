@@ -5,6 +5,7 @@ package com.example.alina.todolist.enums;
  */
 
 public enum TaskState {
-    RUNNING,
-    FINISHED
+    DONE,
+    EXPIRED,
+    ALL
 }
