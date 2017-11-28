@@ -16,8 +16,9 @@ import com.example.alina.todolist.data.SharedPreferencesDataSource;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
+import com.example.alina.todolist.fragments.TaskListFragment;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements TaskListFragment.TaskFragmentCallback{
 
     private FloatingActionButton createTaskButton;
     private IDataSource dataSource;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void initCreateTaskButton() {
+
         createTaskButton = (FloatingActionButton) findViewById(R.id.createTaskButton);
         createTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +68,14 @@ public class MainActivity extends AppCompatActivity{
         mainViewPager.setAdapter(taskFragmentAdapter);
     }
 
+    private void forceInitPager(){
+        int lastTabPosition = mainTabLayout.getSelectedTabPosition();
+        taskFragmentAdapter = new TaskFragmentPagerAdapter(this, getSupportFragmentManager(), dataSource.getTaskList());
+        mainViewPager.setAdapter(taskFragmentAdapter);
+        mainTabLayout.setScrollPosition(lastTabPosition, 0, false);
+        mainViewPager.setCurrentItem(lastTabPosition);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ActivityRequest.CREATE_TASK.ordinal()) {
@@ -73,11 +83,25 @@ public class MainActivity extends AppCompatActivity{
                 Task task = data.getParcelableExtra(BundleKey.TASK.name());
                 if (task != null) {
                     dataSource.createTask(task);
-                    taskFragmentAdapter.notifyDataSetChanged();
+                    forceInitPager();
                 }
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+        } else if (requestCode == ActivityRequest.UPDATE_TASK.ordinal()){
+            if (resultCode == RESULT_OK){
+                Task task = data.getParcelableExtra(BundleKey.TASK.name());
+                if (task != null){
+                    dataSource.updateTask(task);
+                    forceInitPager();
+                }
+            }
+        }else super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    public void onItemClick(Task task) {
+        Intent intent = new Intent(this, CreateTaskActivity.class);
+        intent.putExtra(BundleKey.TASK.name(), task);
+        startActivityForResult(intent, ActivityRequest.UPDATE_TASK.ordinal());
     }
 }

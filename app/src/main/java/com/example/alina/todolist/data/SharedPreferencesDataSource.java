@@ -67,6 +67,16 @@ public class SharedPreferencesDataSource implements IDataSource {
         return result;
     }
 
+    @Override
+    public boolean updateTask(@NonNull Task task) {
+        int position = 0;
+        for (Task x : taskList){
+            if (x.equals(task))
+                position = taskList.indexOf(x);
+        }
+        return updateTask(task, position);
+    }
+
     private String convertTaskListToJson(List<Task> task){
         return gsonBuilder.create().toJson(task, taskListType);
     }

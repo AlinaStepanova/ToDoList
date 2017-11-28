@@ -11,7 +11,6 @@ import com.example.alina.todolist.fragments.TaskListFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Leonid on 27.11.2017.
@@ -21,21 +20,18 @@ public class TaskFragmentPagerAdapter extends FragmentStatePagerAdapter {
     private HashMap<TaskState, ArrayList<Task>> splitTasks = new HashMap<>();
 
     private Context context;
-    private List<Task> tasks;
 
     public TaskFragmentPagerAdapter(Context context, FragmentManager fragmentManager,
                                      ArrayList<Task> tasks) {
         super(fragmentManager);
         this.context = context;
-        this.tasks = tasks;
-//        splitTasksByStatus();
+        splitTasksByStatus(tasks);
     }
 
-    private void splitTasksByStatus() {
+    private void splitTasksByStatus(ArrayList<Task> tasks) {
         for (int i = 0; i < TaskState.values().length; i++) {
             splitTasks.put(TaskState.values()[i], new ArrayList<Task>());
         }
-
         for(Task x : tasks){
             if (x.isDone())
                 splitTasks.get(TaskState.DONE).add(x);
@@ -54,9 +50,7 @@ public class TaskFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return TaskListFragment.newInstance(tasks);
-//        return TaskListFragment.newInstance(splitTasks.get(TaskState.values()[position]));
-//        return TaskListFragment.newInstance(splitTasksByStatus(position));
+        return TaskListFragment.newInstance(splitTasks.get(TaskState.values()[position]));
     }
 
     @Override

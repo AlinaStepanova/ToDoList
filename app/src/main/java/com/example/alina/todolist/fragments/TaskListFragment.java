@@ -1,7 +1,6 @@
 package com.example.alina.todolist.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,14 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.alina.todolist.CreateTaskActivity;
 import com.example.alina.todolist.R;
 import com.example.alina.todolist.adapters.TaskAdapter;
-import com.example.alina.todolist.data.IDataSource;
-import com.example.alina.todolist.data.SharedPreferencesDataSource;
 import com.example.alina.todolist.entities.Task;
-import com.example.alina.todolist.enums.ActivityRequest;
-import com.example.alina.todolist.enums.BundleKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +32,11 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
     private List<Task> taskList;
     private TaskAdapter taskAdapter;
     private RecyclerView taskRecycler;
-    private IDataSource dataSource;
+    private TaskFragmentCallback callback;
+
+    public interface TaskFragmentCallback{
+        void onItemClick(Task task);
+    }
 
     public static TaskListFragment newInstance(List<Task> taskList) {
         Bundle args = new Bundle();
@@ -48,14 +46,24 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
         return fragment;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        callback = (TaskFragmentCallback) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
 
         taskList = getArguments().getParcelableArrayList(ARGS_TASK_LIST);
-
-        dataSource = new SharedPreferencesDataSource(getContext());
 
         initRecycler(view);
 
@@ -111,24 +119,10 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
         return new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == ActivityRequest.UPDATE_TASK.ordinal()) {
-                Task task = data.getParcelableExtra(BundleKey.TASK.name());
-                if (task != null) {
-                    dataSource.updateTask(task, taskAdapter.getData().indexOf(task));
-                    taskAdapter.update(task);
-                }
-            }
-        }
-    }
-
     @Override
     public void onItemClick(Task task) {
-        Intent intent = new Intent(getContext(), CreateTaskActivity.class);
-        intent.putExtra(BundleKey.TASK.name(), task);
-        startActivityForResult(intent, ActivityRequest.UPDATE_TASK.ordinal());
+        if (callback != null){
+            callback.onItemClick(task);
+        }
     }
 }

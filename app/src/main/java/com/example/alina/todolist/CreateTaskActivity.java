@@ -180,6 +180,7 @@ public class CreateTaskActivity extends AppCompatActivity implements
             task.setSubTasks(subTaskAdapter.getSubTaskList());
             Intent result = new Intent();
             result.putExtra(BundleKey.TASK.name(), task);
+            // TODO: don't need send task status, parse it in main activity
             result.putExtra(BundleKey.TASK_STATUS.name(), getRootTaskStatus());
             setResult(Activity.RESULT_OK, result);
             finish();

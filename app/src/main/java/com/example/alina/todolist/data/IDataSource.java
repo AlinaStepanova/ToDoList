@@ -18,4 +18,6 @@ public interface IDataSource {
     boolean createTask(@NonNull Task task);
 
     boolean updateTask(@NonNull Task task, @IntRange(from = 0, to = Integer.MAX_VALUE) int index);
+
+    boolean updateTask(@NonNull Task task);
 }
