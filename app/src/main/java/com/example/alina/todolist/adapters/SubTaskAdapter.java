@@ -68,6 +68,16 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.SubTaskH
         return subTaskList;
     }
 
+    public boolean isAllSubTaskDone(){
+        int count = 0;
+        for (SubTask subTask : subTaskList) {
+            if (subTask.isDone()) {
+                ++count;
+            }
+        }
+        return count != 0 && count == subTaskList.size();
+    }
+
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         Collections.swap(subTaskList, fromPosition, toPosition);

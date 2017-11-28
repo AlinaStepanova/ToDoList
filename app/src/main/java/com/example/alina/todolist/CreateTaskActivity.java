@@ -166,7 +166,7 @@ public class CreateTaskActivity extends AppCompatActivity implements
             task.setStatus(TaskObject.TaskStatus.NEW);
             saveTask();
         }
-        else if (task.isAllSubTasksDone() || task.getSubTasks().size() == 0) {
+        else if (subTaskAdapter.isAllSubTaskDone() || subTaskAdapter.getSubTaskList().size() == 0) {
             task.setStatus(TaskObject.TaskStatus.DONE);
             saveTask();
         } else {

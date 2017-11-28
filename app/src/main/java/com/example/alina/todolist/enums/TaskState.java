@@ -7,9 +7,9 @@ import com.example.alina.todolist.R;
  */
 
 public enum TaskState {
-    ALL(R.string.tab_all),
-    EXPIRED(R.string.tab_expired),
-    DONE(R.string.tab_done);
+    DONE(R.string.done_task),
+    EXPIRED(R.string.expired_task),
+    ALL(R.string.all_tasks);
 
     public int pageTitle;
 
