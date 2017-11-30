@@ -261,10 +261,10 @@ public class FileDataSource implements IDataSource, LoaderManager.LoaderCallback
         }
 
         private void openDataSource(){
-            tasksFile = new File(getContext().getFilesDir(), TASKS_FILE_NAME);
-            openFile(tasksFile);
             categoriesFile = new File(getContext().getFilesDir(), CATEGORIES_FILE_NAME);
             openFile(categoriesFile);
+            tasksFile = new File(getContext().getFilesDir(), TASKS_FILE_NAME);
+            openFile(tasksFile);
             usersFile = new File(getContext().getFilesDir(), USERS_FILE_NAME);
             openFile(usersFile);
             currentUserFile = new File(getContext().getFilesDir(), CURRENT_USER_FILE_NAME);

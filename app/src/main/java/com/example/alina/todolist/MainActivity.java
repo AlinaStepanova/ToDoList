@@ -6,19 +6,19 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.alina.todolist.adapters.TaskFragmentPagerAdapter;
+import com.example.alina.todolist.data.FileDataSource;
 import com.example.alina.todolist.data.IDataSource;
-import com.example.alina.todolist.data.SharedPreferencesDataSource;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.TaskListFragment;
+import com.example.alina.todolist.listeners.OnDataChangedListener;
 
-public class MainActivity extends BaseActivity implements TaskListFragment.TaskFragmentCallback{
+public class MainActivity extends BaseActivity implements TaskListFragment.TaskFragmentCallback, OnDataChangedListener{
 
     private FloatingActionButton createTaskButton;
     private IDataSource dataSource;
@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
 
         initCreateTaskButton();
 
-        dataSource = new SharedPreferencesDataSource(getApplicationContext());
+        dataSource = new FileDataSource(this, this);
 
         initViewPager();
     }
@@ -103,5 +103,10 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
         Intent intent = new Intent(this, CreateTaskActivity.class);
         intent.putExtra(BundleKey.TASK.name(), task);
         startActivityForResult(intent, ActivityRequest.UPDATE_TASK.ordinal());
+    }
+
+    @Override
+    public void notifyDataChanged() {
+        forceInitPager();
     }
 }
