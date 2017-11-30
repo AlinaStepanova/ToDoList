@@ -24,7 +24,7 @@ import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseTimerActivity {
 
     private FloatingActionButton createTaskButton;
     private IDataSource dataSource;
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 Task task = new Task();
                 Intent intent = new Intent(MainActivity.this, CreateTaskActivity.class);
                 intent.putExtra(BundleKey.TASK.name(), task);
+                setNeedCheckCurrentTime(false);
                 startActivityForResult(intent, ActivityRequest.CREATE_TASK.ordinal());
             }
         });
@@ -127,5 +128,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setLayoutManager(getGridLayoutManager());
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

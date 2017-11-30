@@ -16,6 +16,31 @@ public class StaticDataSource implements IDataSource {
     private static final ArrayList<Task> tasks = new ArrayList<>();
 
     @Override
+    public User getCurrentUser() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<User> getUserList() {
+        return null;
+    }
+
+    @Override
+    public boolean setCurrentUser(@NonNull User user) {
+        return false;
+    }
+
+    @Override
+    public boolean addUser(@NonNull User user) {
+        return false;
+    }
+
+    @Override
+    public void saveCurrentUser() {
+
+    }
+
+    @Override
     public ArrayList<Task> getTaskList() {
         return tasks;
     }

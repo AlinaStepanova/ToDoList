@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ToDoList.iml" filepath="$PROJECT_DIR$/ToDoList.iml" />
+      <module fileurl="file://E:\Android\MobyDevProjects\ToDoListAlina\ToDoList.iml" filepath="E:\Android\MobyDevProjects\ToDoListAlina\ToDoList.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ToDoListAlina.iml" filepath="$PROJECT_DIR$/.idea/ToDoListAlina.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://E:\Android\MobyDevProjects\ToDoListAlina\app\app.iml" filepath="E:\Android\MobyDevProjects\ToDoListAlina\app\app.iml" />
     </modules>
   </component>
 </project>

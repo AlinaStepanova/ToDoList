@@ -20,7 +20,7 @@ import com.example.alina.todolist.validators.Validator;
 
 import java.util.Date;
 
-public class CreateTaskActivity extends AppCompatActivity implements DatePickerFragment.OnDateSelectedListener {
+public class CreateTaskActivity extends BaseTimerActivity implements DatePickerFragment.OnDateSelectedListener {
 
     private Task task;
     private TextInputLayout nameWrapper;
@@ -117,5 +117,15 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerF
         dateTextView = (TextView) findViewById(R.id.dateTextView);
         task.setExpireDate(date);
         dateTextView.setText(task.getExpireDateString());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

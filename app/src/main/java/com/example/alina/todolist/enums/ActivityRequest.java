@@ -5,5 +5,8 @@ package com.example.alina.todolist.enums;
  */
 
 public enum ActivityRequest {
-    CREATE_TASK
+    CREATE_TASK,
+    CHECK_PASSWORD,
+    WATCH_CATEGORY,
+    ON_CHECK_PIN_PRESSED_BACK
 }
