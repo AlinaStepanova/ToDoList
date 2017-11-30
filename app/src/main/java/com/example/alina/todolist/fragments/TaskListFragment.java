@@ -26,7 +26,8 @@ import java.util.List;
  * Created by Leonid on 27.11.2017.
  */
 
-public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClickListener{
+public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClickListener {
+
     private static final String ARGS_TASK_LIST = "ARGS_TASK_LIST";
 
     private List<Task> taskList;
@@ -36,6 +37,7 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
 
     public interface TaskFragmentCallback{
         void onItemClick(Task task);
+        void onItemLongClick(Task task);
     }
 
     public static TaskListFragment newInstance(List<Task> taskList) {
@@ -62,13 +64,9 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
-
         taskList = getArguments().getParcelableArrayList(ARGS_TASK_LIST);
-
         initRecycler(view);
-
         setHasOptionsMenu(true);
-
         return view;
     }
 
@@ -123,6 +121,13 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
     public void onItemClick(Task task) {
         if (callback != null){
             callback.onItemClick(task);
+        }
+    }
+
+    @Override
+    public void onItemLongClick(Task task) {
+        if(callback != null) {
+            callback.onItemLongClick(task);
         }
     }
 }

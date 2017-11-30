@@ -24,6 +24,13 @@
             android:text="@string/text_description_view"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"
             android:textColor="@color/colorDescriptionBlack"/>
+        <TextView
+            android:id="@+id/categoryTextView"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sh_square_round_left_corner_black"/>
     </LinearLayout>
     <FrameLayout
         android:layout_width="wrap_content"

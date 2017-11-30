@@ -9,4 +9,7 @@
    <dimen name="max_margin">32dip</dimen>
    <integer name="max_length">1024</integer>
    <dimen name="divider_height">1dip</dimen>
+   <dimen name="app_bar_height">180dp</dimen>
+   <dimen name="fab_margin">16dp</dimen>
+   <dimen name="text_margin">16dp</dimen>
 </resources>

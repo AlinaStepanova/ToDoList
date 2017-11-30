@@ -17,6 +17,7 @@ import java.util.HashMap;
  */
 
 public class TaskFragmentPagerAdapter extends FragmentStatePagerAdapter {
+
     private HashMap<TaskState, ArrayList<Task>> splitTasks = new HashMap<>();
 
     private Context context;
