@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -34,7 +33,7 @@ import com.example.alina.todolist.validators.Validator;
 
 import java.util.Date;
 
-public class CreateTaskActivity extends AppCompatActivity implements
+public class CreateTaskActivity extends BaseActivity implements
         DatePickerFragment.OnDateSelectedListener,
         AddSubTaskDialogFragment.CreateSubTaskDialogListener,
         SubTaskAdapter.ItemSwipeCallback{
@@ -180,7 +179,6 @@ public class CreateTaskActivity extends AppCompatActivity implements
             task.setSubTasks(subTaskAdapter.getSubTaskList());
             Intent result = new Intent();
             result.putExtra(BundleKey.TASK.name(), task);
-            // TODO: don't need send task status, parse it in main activity
             result.putExtra(BundleKey.TASK_STATUS.name(), getRootTaskStatus());
             setResult(Activity.RESULT_OK, result);
             finish();
