@@ -18,6 +18,17 @@
         </activity>
         <activity android:windowSoftInputMode="adjustPan|stateAlwaysHidden" android:name=".CreateTaskActivity">
         </activity>
+
+        <activity android:name=".CategoryActivity" />
+        <activity
+            android:name=".TaskActivity"
+            android:label="@string/title_activity_task"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

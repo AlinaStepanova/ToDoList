@@ -18,7 +18,7 @@ import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.TaskListFragment;
 
-public class MainActivity extends AppCompatActivity implements TaskListFragment.TaskFragmentCallback{
+public class MainActivity extends BaseActivity implements TaskListFragment.TaskFragmentCallback{
 
     private FloatingActionButton createTaskButton;
     private IDataSource dataSource;
