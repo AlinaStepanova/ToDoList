@@ -6,5 +6,9 @@
         android:id="@+id/item_save"
         app:showAsAction="always"
         android:titleCondensed="Save Task"
-        android:title="@string/save"/>
+        android:title=""/>
+    <item
+        android:id="@+id/item_done_task"
+        app:showAsAction="ifRoom"
+        android:title=""/>
 </menu>
