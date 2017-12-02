@@ -8,7 +8,6 @@ import com.example.alina.todolist.validators.Constants;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -22,37 +21,28 @@ public class Task extends TaskObject {
 
     private Date expireDate;
 
-    private List<SubTask> subTasksList;
-
+    private ArrayList<SubTask> subTasksList;
     public Task() {
         expireDate = new Date();
         subTasksList = new ArrayList<>();
     }
 
-    public List<SubTask> getSubTasks() {
-        return subTasksList;
+    public String getExpireDateString() {
+        return Constants.DATE_FORMAT.format(expireDate);
     }
 
-    public void setExpireDate(Date expireDate) {
-        this.expireDate = expireDate;
+    public String getName() {
+        return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setSubTasks(List<SubTask> subTasks) {
-        this.subTasksList = subTasks;
+    public boolean isExpire(Date date) {
+        return expireDate.compareTo(date) < 1;
     }
 
     public boolean isExpire() {
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
         return expireDate.compareTo(date) < 1;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getLeftTime() {
@@ -77,19 +67,21 @@ public class Task extends TaskObject {
         return result;
     }
 
-    public String getExpireDateString() {
-        return Constants.DATE_FORMAT.format(expireDate);
+    public void setExpireDate(Date expireDate) {
+        this.expireDate = expireDate;
     }
 
-    public boolean isAllSubTasksDone() {
-        int count = 0;
-        for (SubTask subTask : subTasksList) {
-            if (subTask.isDone()) {
-                ++count;
-            }
-        }
-        return count != 0 && count == getSubTasks().size();
+    public void setName(String name) {
+        this.name = name;
     }
+
+    /*public ArrayList<SubTask> getSubTasks() {
+        return subTasks;
+    }
+
+    public void setSubTasks(ArrayList<SubTask> subTasks) {
+        this.subTasks = subTasks;
+    }*/
 
     @Override
     public boolean isDone() {
@@ -101,7 +93,7 @@ public class Task extends TaskObject {
         super.writeToParcel(dest, flags);
         dest.writeString(this.name);
         dest.writeLong(this.expireDate != null ? this.expireDate.getTime() : -1);
-        dest.writeTypedList(this.subTasksList);
+        //dest.writeTypedList(this.subTasksList);
     }
 
     protected Task(Parcel in) {
@@ -109,7 +101,7 @@ public class Task extends TaskObject {
         this.name = in.readString();
         long tmpExpireDate = in.readLong();
         this.expireDate = tmpExpireDate == -1 ? null : new Date(tmpExpireDate);
-        this.subTasksList = in.createTypedArrayList(SubTask.CREATOR);
+        //this.subTasksList = in.createTypedArrayList(SubTask.CREATOR);
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -123,13 +115,4 @@ public class Task extends TaskObject {
             return new Task[0];
         }
     };
-
-    @Override
-    public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", expireDate=" + expireDate +
-                ", subTasksList=" + subTasksList + " " + getStatus().toString() + " " +
-                '}';
-    }
 }

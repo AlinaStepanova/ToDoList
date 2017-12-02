@@ -16,10 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".CreateTaskActivity"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-        <activity android:name=".TaskActivity"
-                  android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".CreateTaskActivity">
+        </activity>
     </application>
+
 </manifest>

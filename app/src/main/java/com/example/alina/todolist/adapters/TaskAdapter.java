@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.alina.todolist.R;
@@ -19,24 +18,11 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public interface OnItemClickListener {
-
-        void onItemClick(Task task);
-
-        void onItemLongClick(Task task);
-    }
-
     private List<Task> tasks;
-    private OnItemClickListener onItemClickListener;
 
-    public TaskAdapter(@NonNull List<Task> tasks, OnItemClickListener onItemClickListener) {
+    public TaskAdapter(@NonNull List<Task> tasks) {
         super();
         this.tasks = tasks;
-        this.onItemClickListener = onItemClickListener;
-    }
-
-    public List<Task> getData() {
-        return tasks;
     }
 
     @Override
@@ -66,10 +52,10 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof TaskViewHolderRunning) {
             TaskViewHolderRunning running = (TaskViewHolderRunning) holder;
-            running.bind(tasks.get(position), onItemClickListener);
+            running.bind(tasks.get(position));
         } else if(holder instanceof TaskViewHolderFinished){
             TaskViewHolderFinished finished = (TaskViewHolderFinished) holder;
-            finished.bind(tasks.get(position), onItemClickListener);
+            finished.bind(tasks.get(position));
         }
     }
 
@@ -83,47 +69,20 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyItemInserted(tasks.size() - 1);
     }
 
-    public void update(Task task) {
-        int position = tasks.indexOf(task);
-        tasks.set(position, task);
-        notifyItemChanged(position);
-    }
-
     private class TaskViewHolderRunning extends RecyclerView.ViewHolder {
 
         TextView name;
         TextView description;
-        TextView subTaskCount;
-        FrameLayout subTaskCountLayout;
 
         TaskViewHolderRunning(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.nameTextView);
             description = (TextView) itemView.findViewById(R.id.descriptionTextView);
-            subTaskCount = (TextView) itemView.findViewById(R.id.subTaskCount);
-            subTaskCountLayout = (FrameLayout) itemView.findViewById(R.id.subTaskCountLayout);
         }
 
-        void bind(final Task task, final OnItemClickListener onItemClickListener) {
+        void bind(Task task) {
             name.setText(task.getName());
             description.setText(task.getDescription());
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClickListener.onItemClick(task);
-                }
-            });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    onItemClickListener.onItemLongClick(task);
-                    return true;
-                }
-            });
-            if (task.getSubTasks().size() > 0){
-                subTaskCountLayout.setVisibility(View.VISIBLE);
-                subTaskCount.setText(String.valueOf(task.getSubTasks().size()));
-            }
         }
     }
 
@@ -131,37 +90,16 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         TextView name;
         TextView description;
-        TextView subTaskCount;
-        FrameLayout subTaskCountLayout;
 
         TaskViewHolderFinished(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.nameTextViewFinished);
             description = (TextView) itemView.findViewById(R.id.descriptionTextViewFinished);
-            subTaskCount = (TextView) itemView.findViewById(R.id.subTaskCount);
-            subTaskCountLayout = (FrameLayout) itemView.findViewById(R.id.subTaskCountLayout);
         }
 
-        void bind(final Task task, final OnItemClickListener onItemClickListener) {
+        void bind(Task task) {
             name.setText(task.getName());
             description.setText(task.getDescription());
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClickListener.onItemClick(task);
-                }
-            });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    onItemClickListener.onItemLongClick(task);
-                    return true;
-                }
-            });
-            if (task.getSubTasks().size() > 0){
-                subTaskCountLayout.setVisibility(View.VISIBLE);
-                subTaskCount.setText(String.valueOf(task.getSubTasks().size()));
-            }
         }
     }
 }

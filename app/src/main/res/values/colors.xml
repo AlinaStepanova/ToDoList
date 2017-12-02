@@ -2,12 +2,11 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorPrimaryWhite">#ffff</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorDescriptionBlack">#000</color>
-    <color name="colorBackGroundItem">#eeeeee</color>
+    <color name="colorBackGroundItem">#fce4ec</color>
     <color name="colorIconDate">#696969</color>
-    <color name="colorExpiredTaskColor">#f44336</color>
-    <color name="colorExpiredTaskColorBackground">#ffcdd2</color>
-    <color name="colorExpiredTaskText">#f5a910</color>
+    <color name="ExpiredTaskColor">#f44336</color>
+    <color name="ExpiredTaskColorBackground">#ffcdd2</color>
+    <color name="ExpiredTaskText">#f5a910</color>
 </resources>

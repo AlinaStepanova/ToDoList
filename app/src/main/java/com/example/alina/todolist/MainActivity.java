@@ -2,33 +2,34 @@ package com.example.alina.todolist;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.alina.todolist.adapters.TaskFragmentPagerAdapter;
+import com.example.alina.todolist.adapters.TaskAdapter;
+import com.example.alina.todolist.adapters.TaskAdapterStyles;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.data.SharedPreferencesDataSource;
+import com.example.alina.todolist.decorators.DividerItemDecoration;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
-import com.example.alina.todolist.fragments.TaskListFragment;
 
-public class MainActivity extends AppCompatActivity implements TaskListFragment.TaskFragmentCallback {
+public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton createTaskButton;
     private IDataSource dataSource;
-    private TabLayout mainTabLayout;
-    private ViewPager mainViewPager;
-    private TaskFragmentPagerAdapter taskFragmentAdapter;
+    private RecyclerView taskRecyclerView;
+    private TaskAdapter taskAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         setContentView(R.layout.activity_main);
         initCreateTaskButton();
         dataSource = new SharedPreferencesDataSource(getApplicationContext());
-        initViewPager();
+        initTaskRecycler();
     }
 
     @Override
@@ -60,71 +61,71 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         });
     }
 
-    private void initViewPager(){
-        taskFragmentAdapter = new TaskFragmentPagerAdapter(this, getSupportFragmentManager(), dataSource.getTaskList());
-        mainTabLayout = (TabLayout) findViewById(R.id.mainTabLayout);
-        mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
-        mainTabLayout.setupWithViewPager(mainViewPager);
-        mainViewPager.setAdapter(taskFragmentAdapter);
+    private void initTaskRecycler() {
+        int margin = (int) getResources().getDimension(R.dimen.min_margin);
+        GridLayoutManager gridLayoutManager = getGridLayoutManager();
+        setLayoutManager(gridLayoutManager);
+        taskRecyclerView.addItemDecoration(new DividerItemDecoration(this, margin));
     }
 
-    private void forceInitPager(){
-        int lastTabPosition = mainTabLayout.getSelectedTabPosition();
-        taskFragmentAdapter = new TaskFragmentPagerAdapter(this, getSupportFragmentManager(), dataSource.getTaskList());
-        mainViewPager.setAdapter(taskFragmentAdapter);
-        mainTabLayout.setScrollPosition(lastTabPosition, 0, false);
-        mainViewPager.setCurrentItem(lastTabPosition);
+    private void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+        taskRecyclerView = (RecyclerView) findViewById(R.id.taskRecyclerView);
+        taskRecyclerView.setLayoutManager(layoutManager);
+        taskAdapter = new TaskAdapter(dataSource.getTaskList());
+        taskRecyclerView.setAdapter(taskAdapter);
+    }
+
+    @NonNull
+    private GridLayoutManager getGridLayoutManager() {
+        return new GridLayoutManager(this, getResources()
+                    .getInteger(R.integer.column_count));
+    }
+
+    @NonNull
+    private LinearLayoutManager getLinearLayoutManager() {
+        return new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.layout_editor, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_change_layout: {
+                changeLayout();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivityRequest.CREATE_TASK.ordinal()) {
-            if (resultCode == Activity.RESULT_OK) {
-                Task task = data.getParcelableExtra(BundleKey.TASK.name());
-                if (task != null) {
-                    dataSource.createTask(task);
-                    forceInitPager();
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (ActivityRequest.values()[requestCode]) {
+            case CREATE_TASK:
+                if (resultCode == Activity.RESULT_OK) {
+                    Task task = data.getParcelableExtra(BundleKey.TASK.name());
+                    if (task != null) {
+                        dataSource.createTask(task);
+                        taskAdapter.add(task);
+                    }
                 }
-            }
-        } else if (requestCode == ActivityRequest.UPDATE_TASK.ordinal()){
-            if (resultCode == RESULT_OK){
-                Task task = data.getParcelableExtra(BundleKey.TASK.name());
-                if (task != null){
-                    dataSource.updateTask(task);
-                    forceInitPager();
-                }
-            }
-        }else super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
     }
 
-    @Override
-    public void onItemLongClick(Task task) {
-        Intent intent = new Intent(this, CreateTaskActivity.class);
-        intent.putExtra(BundleKey.TASK.name(), task);
-        startActivityForResult(intent, ActivityRequest.UPDATE_TASK.ordinal());
-    }
-
-    @Override
-    public void onItemClick(Task task) {
-        Intent intent = new Intent(this, TaskActivity.class);
-        intent.putExtra(BundleKey.TASK.name(), task);
-        startActivity(intent);
-        /*View nameTextView = findViewById(R.id.nameTextView);
-        View descriptionTextView = findViewById(R.id.descriptionTextView);
-        View categoryTextView = findViewById(R.id.categoryTextView);
-        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                new Pair<>(nameTextView, ViewCompat.getTransitionName(nameTextView)),
-                new Pair<>(descriptionTextView, ViewCompat.getTransitionName(descriptionTextView))
-                //new Pair<>(categoryTextView, ViewCompat.getTransitionName(categoryTextView))
-        );
-        Intent intent = new Intent(this, TaskActivity.class);
-        intent.putExtra(BundleKey.TASK.name(), task);
-        intent.putExtra(BundleKey.NAME_TRANSITION.name(), ViewCompat.getTransitionName(nameTextView));
-        intent.putExtra(BundleKey.DESCRIPTION_TRANSITION.name(), ViewCompat.getTransitionName(descriptionTextView));
-        intent.putExtra(BundleKey.CATEGORY_TRANSITION.name(), ViewCompat.getTransitionName(categoryTextView));
-        ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
-        ActivityCompat.startActivity();*/
-
+    private void changeLayout() {
+        if (taskRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
+            setLayoutManager(getLinearLayoutManager());
+        } else {
+            setLayoutManager(getGridLayoutManager());
+        }
     }
 }
