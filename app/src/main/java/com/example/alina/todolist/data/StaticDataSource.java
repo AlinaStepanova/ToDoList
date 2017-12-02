@@ -34,4 +34,14 @@ public class StaticDataSource implements IDataSource {
         }
         return result;
     }
+
+    @Override
+    public boolean updateTask(@NonNull Task task) {
+        int position = 0;
+        for (Task x : tasks){
+            if (x.equals(task))
+                position = tasks.indexOf(task);
+        }
+        return updateTask(task, position);
+    }
 }

@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
@@ -16,8 +16,8 @@
 
     <style name="Item.Expired" parent="AppTheme">
         <item name="layoutBackGroundColor">#ffeb3b</item>
-        <item name="textColorSmall">@color/ExpiredTaskColor</item>
-        <item name="textColorLarge">@color/ExpiredTaskColorBackground</item>
+        <item name="textColorSmall">@color/colorExpiredTaskColor</item>
+        <item name="textColorLarge">@color/colorExpiredTaskColorBackground</item>
     </style>
 
     <style name="ItemTextViewSmall">
@@ -31,13 +31,16 @@
     </style>
 
     <style name="ItemTaskLayout">
-        <item name="android:background">?attr/textColorLarge</item>
+        <item name="android:background">?attr/layoutBackGroundColor</item>
     </style>
 
-    <style name="Divider">
+    <style name="divider">
         <item name="android:layout_height">@dimen/divider_height</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:background">@color/colorIconDate</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/divider_margin</item>
+        <item name="android:layout_marginRight">@dimen/divider_margin</item>
+        <item name="android:layout_marginBottom">@dimen/mid_margin</item>
+        <item name="android:background">@color/colorPrimaryWhite</item>
     </style>
 
     <style name="date_style">
@@ -61,12 +64,24 @@
         <item name="android:background">@color/colorAccent</item>
     </style>
 
-    <style name="ItemLayout.White" parent="date_style">
+    <style name="ItemLayout.Black" parent="date_style">
         <item name="android:textColor">@color/colorDescriptionBlack</item>
     </style>
 
-    <style name="ItemLayout.White.Large" parent="date_style">
+    <style name="ItemLayout.Black.Medium" parent="date_style">
+        <item name="android:textColor">@color/colorDescriptionBlack</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Material.Medium</item>
+    </style>
+
+    <style name="ItemLayout.Black.Large" parent="date_style">
         <item name="android:textAppearance">@android:style/TextAppearance.Material.Large</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 </resources>
