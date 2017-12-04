@@ -12,7 +12,11 @@ import java.util.ArrayList;
  */
 
 public interface IDataSource {
-
+    User getCurrentUser();
+    ArrayList<User> getUserList();
+    boolean setCurrentUser(@NonNull User user);
+    boolean addUser(@NonNull User user);
+    void saveCurrentUser();
     ArrayList<Task> getTaskList();
 
     boolean createTask(@NonNull Task task);

@@ -1,0 +1,35 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.alina.todolist.fragments.UserPinFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space16"
+            android:gravity="center"
+            android:text="@string/enter_your_pin"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
+
+        <include
+            android:id="@+id/pinView"
+            layout="@layout/edit_for_pin_number" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/buttonUserPinNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:text="@string/next" />
+
+</FrameLayout>
+

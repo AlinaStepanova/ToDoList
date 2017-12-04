@@ -22,7 +22,9 @@ import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.TaskListFragment;
 
-public class MainActivity extends AppCompatActivity implements TaskListFragment.TaskFragmentCallback {
+
+public class MainActivity extends BaseTimerActivity implements TaskListFragment.TaskFragmentCallback{
+
 
     private FloatingActionButton createTaskButton;
     private IDataSource dataSource;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
                 Task task = new Task();
                 Intent intent = new Intent(MainActivity.this, CreateTaskActivity.class);
                 intent.putExtra(BundleKey.TASK.name(), task);
+                setNeedCheckCurrentTime(false);
                 startActivityForResult(intent, ActivityRequest.CREATE_TASK.ordinal());
             }
         });
@@ -126,5 +129,15 @@ public class MainActivity extends AppCompatActivity implements TaskListFragment.
         ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
         ActivityCompat.startActivity();*/
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

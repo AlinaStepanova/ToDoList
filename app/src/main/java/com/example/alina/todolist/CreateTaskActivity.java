@@ -34,10 +34,11 @@ import com.example.alina.todolist.validators.Validator;
 
 import java.util.Date;
 
-public class CreateTaskActivity extends AppCompatActivity implements
+public class CreateTaskActivity extends BaseTimerActivity implements
         DatePickerFragment.OnDateSelectedListener,
         AddSubTaskDialogFragment.CreateSubTaskDialogListener,
         SubTaskAdapter.ItemSwipeCallback{
+
 
     private Task task;
     private TextInputLayout nameWrapper;
@@ -236,4 +237,15 @@ public class CreateTaskActivity extends AppCompatActivity implements
                     }
                 }).show();
     }
+
+
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }
+
