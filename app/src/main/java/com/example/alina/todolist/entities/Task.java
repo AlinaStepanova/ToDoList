@@ -1,8 +1,12 @@
 package com.example.alina.todolist.entities;
 
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 
+import com.example.alina.todolist.db.DataBaseContract;
+import com.example.alina.todolist.db.DataBaseManager;
 import com.example.alina.todolist.validators.Constants;
 
 import java.util.ArrayList;
@@ -12,11 +16,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by Alina on 02.11.2017.
- */
 
-public class Task extends TaskObject {
+
+public class Task extends TaskObject implements DataBaseContract{
 
     private String name;
 
@@ -125,11 +127,33 @@ public class Task extends TaskObject {
     };
 
     @Override
+    public void initByCursor(final Cursor cursor) {
+//        this.id = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_ID));
+//        this.uuid = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_UUID));
+//        this.name = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_NAME));
+//        this.description =
+//                cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_DESCRIPTION));
+//        this.status = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_STATUS));
+    }
+
+    @Override
+    public ContentValues toContentValues() {
+        ContentValues contentValues = new ContentValues();
+//        contentValues.put(DataBaseManager.COLUMN_TASK_UUID, uuid);
+//        contentValues.put(DataBaseManager.COLUMN_TASK_NAME, name);
+//        contentValues.put(DataBaseManager.COLUMN_TASK_DESCRIPTION, description);
+//        contentValues.put(DataBaseManager.COLUMN_TASK_STATUS, status);
+        return contentValues;
+    }
+
+    @Override
     public String toString() {
         return "Task{" +
-                "name='" + name + '\'' +
-                ", expireDate=" + expireDate +
-                ", subTasksList=" + subTasksList + " " + getStatus().toString() + " " +
+//                "id=" + id +
+//                ", uuid='" + uuid + '\'' +
+//                ", name='" + name + '\'' +
+//                ", description='" + description + '\'' +
+//                ", status='" + status + '\'' +
                 '}';
     }
 }
