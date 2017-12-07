@@ -29,5 +29,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <provider
+            android:name=".db.ToDoProvider"
+            android:authorities="com.example.alina.todolist"
+            android:enabled="true"
+            android:exported="false">
+        </provider>
+
     </application>
 </manifest>

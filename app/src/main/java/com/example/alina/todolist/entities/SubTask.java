@@ -1,12 +1,17 @@
 package com.example.alina.todolist.entities;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
+
+import com.example.alina.todolist.db.DataBaseContract;
+import com.example.alina.todolist.db.DataBaseManager;
 
 /**
  * Created by Alina on 02.11.2017.
  */
 
-public class SubTask extends TaskObject {
+public class SubTask extends TaskObject implements DataBaseContract{
 
     public SubTask() {
         super();
@@ -14,6 +19,17 @@ public class SubTask extends TaskObject {
 
     protected SubTask(Parcel in) {
         super(in);
+    }
+
+    @Override
+    public void initByCursor(Cursor cursor) {
+        this.setDescription(cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_SUBTASK_DESCRIPTION)));
+        this.setStatus(TaskStatus.valueOf(cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_SUBTASK_STATUS))));
+    }
+
+    @Override
+    public ContentValues toContentValues() {
+        return null;
     }
 
     @Override
