@@ -10,6 +10,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
 
     private static final int DATA_BASE_VERSION_1 = 1;
 
+
     public static final String TASK_TABLE_NAME = "task_table";
 
     public static final String COLUMN_TASK_ID = "task_id";
@@ -27,9 +28,9 @@ public class DataBaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_EXPIRE_DATE = "task_expire_date";
 
     public static final String COLUMN_TASK_USERID = "task_user_id";
-    /*
-     * CategoryTable
-     */
+
+
+
     public static final String CATEGORY_TABLE_NAME = "category_table";
 
     public static final String COLUMN_CATEGORY_ID = "category_id";
@@ -39,9 +40,9 @@ public class DataBaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_CATEGORY_COLOR = "category_color";
 
     public static final String COLUMN_CATEGORY_USERID = "user_id";
-    /*
-     * UserTable
-     */
+
+
+
     public static final String USER_TABLE_NAME = "user_table";
 
     public static final String COLUMN_USER_ID = "user_id";
@@ -51,18 +52,15 @@ public class DataBaseManager extends SQLiteOpenHelper {
     public static final String COLUMN_USER_EMAIL = "user_email";
 
     public static final String COLUMN_USER_PIN = "user_pin";
-    /*
-     * SubTaskTable
-     */
+
+
+
     public static final String SUBTASK_TABLE_NAME = "subtask_table";
 
     public static final String COLUMN_SUBTASK_ID = "subtask_id";
 
-    public static final String COLUMN_SUBTASK_DESCRIPTION = "subtask_description";
-
     public static final String COLUMN_SUBTASK_TASKID = "subtask_task_id";
 
-    public static final String COLUMN_SUBTASK_STATUS = "subtask_status";
 
 
     public DataBaseManager(final Context context) {
@@ -95,9 +93,9 @@ public class DataBaseManager extends SQLiteOpenHelper {
                 + ");");
         sqLiteDatabase.execSQL("CREATE TABLE " + SUBTASK_TABLE_NAME + "("
                 + COLUMN_SUBTASK_ID + " integer primary key autoincrement,"
-                + COLUMN_SUBTASK_DESCRIPTION + " text,"
+                + COLUMN_TASK_DESCRIPTION + " text,"
                 + COLUMN_SUBTASK_TASKID + " integer,"
-                + COLUMN_SUBTASK_STATUS + " text" + ");");
+                + COLUMN_TASK_STATUS + " text" + ");");
     }
 
     @Override

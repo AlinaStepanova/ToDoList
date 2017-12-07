@@ -25,16 +25,11 @@ public class Task extends TaskObject implements DataBaseContract{
 
     private Date expireDate;
 
-    private String uuid;
-
-    private int id;
-
     private List<SubTask> subTasksList;
 
     private Category category;
 
     public Task() {
-        uuid = UUID.randomUUID().toString();
         expireDate = new Date();
         subTasksList = new ArrayList<>();
     }
@@ -109,7 +104,6 @@ public class Task extends TaskObject implements DataBaseContract{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeString(this.uuid);
         dest.writeParcelable(this.category, flags);
         dest.writeString(this.name);
         dest.writeLong(this.expireDate != null ? this.expireDate.getTime() : -1);
@@ -118,7 +112,6 @@ public class Task extends TaskObject implements DataBaseContract{
 
     protected Task(Parcel in) {
         super(in);
-        this.uuid = in.readString();
         this.category = in.readParcelable(Category.class.getClassLoader());
         this.name = in.readString();
         long tmpExpireDate = in.readLong();
@@ -140,21 +133,14 @@ public class Task extends TaskObject implements DataBaseContract{
 
     @Override
     public void initByCursor(final Cursor cursor) {
-        this.id = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_ID));
-        this.uuid = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_UUID));
+        super.initByCursor(cursor);
         this.name = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_NAME));
-        this.setDescription(cursor
-                .getString(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_DESCRIPTION)));
-        this.setStatus(TaskStatus.valueOf(cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_STATUS))));
     }
 
     @Override
     public ContentValues toContentValues() {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DataBaseManager.COLUMN_TASK_UUID, uuid);
+        ContentValues contentValues = super.toContentValues();
         contentValues.put(DataBaseManager.COLUMN_TASK_NAME, name);
-        contentValues.put(DataBaseManager.COLUMN_TASK_DESCRIPTION, getDescription());
-        contentValues.put(DataBaseManager.COLUMN_TASK_STATUS, getStatus().toString());
         return contentValues;
     }
 

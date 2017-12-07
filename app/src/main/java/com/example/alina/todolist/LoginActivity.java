@@ -2,12 +2,19 @@ package com.example.alina.todolist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.alina.todolist.data.FileDataSource;
 import com.example.alina.todolist.data.IDataSource;
+import com.example.alina.todolist.db.ContentProviderValues;
+import com.example.alina.todolist.db.DataBaseManager;
+import com.example.alina.todolist.entities.SubTask;
+import com.example.alina.todolist.entities.Task;
+import com.example.alina.todolist.entities.TaskObject;
 import com.example.alina.todolist.entities.User;
 import com.example.alina.todolist.fragments.LoginFragment;
 import com.example.alina.todolist.fragments.UserEmailFragment;
@@ -17,6 +24,7 @@ import com.example.alina.todolist.fragments.UserWelcomeFragment;
 import com.example.alina.todolist.listeners.OnDataChangedListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import static com.example.alina.todolist.enums.BundleKey.NEED_CHECK_PASSWORD;
 
@@ -37,6 +45,22 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
+        ArrayList<SubTask> subTasks = new ArrayList<>();
+        for (int i = 0; i < 40; i++){
+            SubTask subTask = new SubTask();
+            subTask.setDescription("asdasd" + i*300);
+            subTask.setStatus(TaskObject.TaskStatus.NEW);
+            subTask.setId(3);
+        }
+        Task task = new Task();
+        task.setSubTasks(subTasks);
+        getContentResolver().
+
+
+
+
 
         intent = getIntent();
 

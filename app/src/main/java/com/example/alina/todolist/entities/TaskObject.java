@@ -1,15 +1,16 @@
 package com.example.alina.todolist.entities;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.alina.todolist.db.DataBaseContract;
+import com.example.alina.todolist.db.DataBaseManager;
+
 import java.util.UUID;
 
-/**
- * Created by Alina on 02.11.2017.
- */
-
-public abstract class TaskObject implements Parcelable {
+public abstract class TaskObject implements Parcelable, DataBaseContract {
 
     public enum TaskStatus {
         NEW,
@@ -18,6 +19,7 @@ public abstract class TaskObject implements Parcelable {
 
     private String description;
     private TaskStatus status;
+    private int id;
 
     public TaskObject() {
         status = TaskStatus.NEW;
@@ -36,6 +38,30 @@ public abstract class TaskObject implements Parcelable {
         this.description = in.readString();
         int tmpStatus = in.readInt();
         this.status = tmpStatus == -1 ? null : TaskStatus.values()[tmpStatus];
+    }
+
+    @Override
+    public void initByCursor(Cursor cursor) {
+        this.id = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_ID));
+        this.description = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_DESCRIPTION));
+        this.status = TaskStatus.valueOf(cursor.getString(cursor.getColumnIndex(
+                DataBaseManager.COLUMN_TASK_STATUS)));
+    }
+
+    @Override
+    public ContentValues toContentValues() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DataBaseManager.COLUMN_TASK_DESCRIPTION, description);
+        contentValues.put(DataBaseManager.COLUMN_TASK_STATUS, status.name());
+        return contentValues;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public boolean isDone() {

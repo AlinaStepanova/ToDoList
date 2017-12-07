@@ -22,118 +22,134 @@ public class ToDoProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         Cursor cursor;
+        String table;
         if (TextUtils.isEmpty(sortOrder)) {
             sortOrder = DataBaseManager.COLUMN_TASK_ID;
         }
         switch (ContentProviderValues.uriMatcher.match(uri)) {
             case ContentProviderValues.URI_ALL_TASKS:
-                cursor = createCursor(DataBaseManager.TASK_TABLE_NAME, projection, selection, selectionArgs,
-                    sortOrder);
+                table = DataBaseManager.TASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_TASKS_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_TASK_ID, selection, uri.getLastPathSegment());
-                cursor = createCursor(DataBaseManager.TASK_TABLE_NAME, projection, selection, selectionArgs,
-                        sortOrder);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_TASK_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.TASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_CATEGORIES:
-                cursor = createCursor(DataBaseManager.CATEGORY_TABLE_NAME, projection, selection, selectionArgs,
-                        sortOrder);
+                table = DataBaseManager.CATEGORY_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_CATEGORY_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_CATEGORY_ID, selection, uri.getLastPathSegment());
-                cursor = createCursor(DataBaseManager.CATEGORY_TABLE_NAME, projection, selection, selectionArgs,
-                        sortOrder);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_CATEGORY_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.CATEGORY_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_SUBTASKS:
-                cursor = createCursor(DataBaseManager.SUBTASK_TABLE_NAME, projection, selection, selectionArgs,
-                        sortOrder);
+                table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_SUBTASK_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_SUBTASK_ID, selection, uri.getLastPathSegment());
-                cursor = createCursor(DataBaseManager.SUBTASK_TABLE_NAME, projection, selection, selectionArgs,
-                        sortOrder);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_SUBTASK_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_USERS:
-                cursor = createCursor(DataBaseManager.USER_TABLE_NAME, projection, selection, selectionArgs,
-                        sortOrder);
+                table = DataBaseManager.USER_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_USER_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_USER_ID, selection, uri.getLastPathSegment());
-                cursor = createCursor(DataBaseManager.USER_TABLE_NAME, projection, selection, selectionArgs,
-                        sortOrder);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_USER_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.USER_TABLE_NAME;
                 break;
+            case ContentProviderValues.URI_SINGLE_JOIN_TASK_SUBTASK:
 
             default:
                 throw new UnsupportedOperationException("Not yet implemented for " + uri);
         }
+//        cursor = createCursor(table, projection, selection, selectionArgs,
+//                sortOrder);
         notifyChange(uri);
-
+        String s = "SELECT "
+                + DataBaseManager.SUBTASK_TABLE_NAME + "."
+                + DataBaseManager.COLUMN_TASK_DESCRIPTION + " , "
+                + DataBaseManager.SUBTASK_TABLE_NAME + "."
+                + DataBaseManager.COLUMN_TASK_STATUS + " FROM "
+                + DataBaseManager.TASK_TABLE_NAME + " INNER JOIN "
+                + DataBaseManager.SUBTASK_TABLE_NAME + " ON "
+                + DataBaseManager.TASK_TABLE_NAME + "."
+                + DataBaseManager.COLUMN_TASK_ID + " = "
+                + DataBaseManager.SUBTASK_TABLE_NAME + "."
+                + DataBaseManager.COLUMN_SUBTASK_TASKID + " WHERE "
+                + DataBaseManager.TASK_TABLE_NAME + "."
+                + DataBaseManager.COLUMN_TASK_ID + " = ?";
+        cursor = dataBaseManager.getWritableDatabase().rawQuery(s, selectionArgs);
         return cursor;
     }
 
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        int deleteItemRowCount;
+        String table;
         switch (ContentProviderValues.uriMatcher.match(uri)) {
             case ContentProviderValues.URI_ALL_TASKS:
-                deleteItemRowCount = deleteRows(DataBaseManager.TASK_TABLE_NAME, selection, selectionArgs);
+                table = DataBaseManager.TASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_TASKS_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_TASK_ID, selection, uri.getLastPathSegment());
-                deleteItemRowCount = deleteRows(DataBaseManager.TASK_TABLE_NAME, selection, selectionArgs);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_TASK_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.TASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_CATEGORIES:
-                deleteItemRowCount = deleteRows(DataBaseManager.CATEGORY_TABLE_NAME, selection, selectionArgs);
+                table = DataBaseManager.CATEGORY_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_CATEGORY_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_CATEGORY_ID, selection, uri.getLastPathSegment());
-                deleteItemRowCount = deleteRows(DataBaseManager.CATEGORY_TABLE_NAME, selection, selectionArgs);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_CATEGORY_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.CATEGORY_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_SUBTASKS:
-                deleteItemRowCount = deleteRows(DataBaseManager.SUBTASK_TABLE_NAME, selection, selectionArgs);
+                table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_SUBTASK_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_SUBTASK_ID, selection, uri.getLastPathSegment());
-                deleteItemRowCount = deleteRows(DataBaseManager.SUBTASK_TABLE_NAME, selection, selectionArgs);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_SUBTASK_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_USERS:
-                deleteItemRowCount = deleteRows(DataBaseManager.USER_TABLE_NAME, selection, selectionArgs);
+                table = DataBaseManager.USER_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_USER_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_USER_ID, selection, uri.getLastPathSegment());
-                deleteItemRowCount = deleteRows(DataBaseManager.USER_TABLE_NAME, selection, selectionArgs);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_USER_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.USER_TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented for " + uri);
 
         }
         notifyChange(uri);
-        return deleteItemRowCount;
+        return deleteRows(table, selection, selectionArgs);
     }
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
         Uri insertedUri;
+        String table;
         switch (ContentProviderValues.uriMatcher.match(uri)) {
             case ContentProviderValues.URI_ALL_TASKS:
-                insertedUri = insertRow(DataBaseManager.TASK_TABLE_NAME, values,
-                        ContentProviderValues.TASKS_CONTENT_URI);
+                table = DataBaseManager.TASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_CATEGORIES:
-                insertedUri = insertRow(DataBaseManager.CATEGORY_TABLE_NAME, values,
-                        ContentProviderValues.CATEGORY_CONTENT_URI);
+                table = DataBaseManager.CATEGORY_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_SUBTASKS:
-                insertedUri = insertRow(DataBaseManager.SUBTASK_TABLE_NAME, values,
-                        ContentProviderValues.SUBTASK_CONTENT_URI);
+                table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_USERS:
-                insertedUri = insertRow(DataBaseManager.USER_TABLE_NAME, values,
-                        ContentProviderValues.USER_CONTENT_URI);
+                table = DataBaseManager.USER_TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented for " + uri);
         }
+        insertedUri = insertRow(table, values,
+                ContentProviderValues.USER_CONTENT_URI);
         notifyChange(insertedUri);
         return insertedUri;
     }
@@ -141,50 +157,46 @@ public class ToDoProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        int updatedRowCount;
+        String table;
         switch (ContentProviderValues.uriMatcher.match(uri)) {
             case ContentProviderValues.URI_ALL_TASKS:
-                updatedRowCount = updateTable(DataBaseManager.TASK_TABLE_NAME, values, selection,
-                        selectionArgs);
+                table = DataBaseManager.TASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_TASKS_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_TASK_ID, selection,uri.getLastPathSegment());
-                updatedRowCount = updateTable(DataBaseManager.TASK_TABLE_NAME, values, selection,
-                        selectionArgs);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_TASK_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.TASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_CATEGORIES:
-                updatedRowCount = updateTable(DataBaseManager.CATEGORY_TABLE_NAME, values, selection,
-                        selectionArgs);
+                table = DataBaseManager.CATEGORY_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_CATEGORY_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_CATEGORY_ID, selection,uri.getLastPathSegment());
-                updatedRowCount = updateTable(DataBaseManager.CATEGORY_TABLE_NAME, values, selection,
-                        selectionArgs);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_CATEGORY_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.CATEGORY_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_SUBTASKS:
-                updatedRowCount = updateTable(DataBaseManager.SUBTASK_TABLE_NAME, values, selection,
-                        selectionArgs);
+                table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_SUBTASK_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_SUBTASK_ID, selection, uri.getLastPathSegment());
-                updatedRowCount = updateTable(DataBaseManager.SUBTASK_TABLE_NAME, values, selection,
-                        selectionArgs);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_SUBTASK_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_ALL_USERS:
-                updatedRowCount = updateTable(DataBaseManager.USER_TABLE_NAME, values, selection,
-                        selectionArgs);
+                table = DataBaseManager.USER_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_USER_BY_ID:
-                String id = uri.getLastPathSegment();
-                selection = addUriIdSelection(DataBaseManager.COLUMN_USER_ID, selection,id);
-                updatedRowCount = updateTable(DataBaseManager.USER_TABLE_NAME, values, selection,
-                        selectionArgs);
+                selection = addUriIdSelection(DataBaseManager.COLUMN_USER_ID, selection,
+                        uri.getLastPathSegment());
+                table = DataBaseManager.USER_TABLE_NAME;
                 break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented");
         }
         notifyChange(uri);
-        return updatedRowCount;
+        return updateTable(DataBaseManager.USER_TABLE_NAME, values, selection,
+                selectionArgs);
     }
 
     @Override
@@ -192,28 +204,28 @@ public class ToDoProvider extends ContentProvider {
         String type = null;
         switch (ContentProviderValues.uriMatcher.match(uri)) {
             case ContentProviderValues.URI_ALL_TASKS:
-                type = ContentProviderValues.TYPE_CONTENT_MANY;
+                type = ContentProviderValues.TYPE_CONTENT_TASK_MANY;
                 break;
             case ContentProviderValues.URI_SINGLE_TASKS_BY_ID:
-                type = ContentProviderValues.TYPE_CONTENT_SINGLE;
+                type = ContentProviderValues.TYPE_CONTENT_TASK_SINGLE;
                 break;
             case ContentProviderValues.URI_ALL_CATEGORIES:
-                type = ContentProviderValues.TYPE_CONTENT_MANY;
+                type = ContentProviderValues.TYPE_CONTENT_CATEGORY_MANY;
                 break;
             case ContentProviderValues.URI_SINGLE_CATEGORY_BY_ID:
-                type = ContentProviderValues.TYPE_CONTENT_SINGLE;
+                type = ContentProviderValues.TYPE_CONTENT_CATEGORY_SINGLE;
                 break;
             case ContentProviderValues.URI_ALL_SUBTASKS:
-                type = ContentProviderValues.TYPE_CONTENT_MANY;
+                type = ContentProviderValues.TYPE_CONTENT_SUBTASK_MANY;
                 break;
             case ContentProviderValues.URI_SINGLE_SUBTASK_BY_ID:
-                type = ContentProviderValues.TYPE_CONTENT_SINGLE;
+                type = ContentProviderValues.TYPE_CONTENT_SUBTASK_SINGLE;
                 break;
             case ContentProviderValues.URI_ALL_USERS:
-                type = ContentProviderValues.TYPE_CONTENT_MANY;
+                type = ContentProviderValues.TYPE_CONTENT_USER_MANY;
                 break;
             case ContentProviderValues.URI_SINGLE_USER_BY_ID:
-                type = ContentProviderValues.TYPE_CONTENT_SINGLE;
+                type = ContentProviderValues.TYPE_CONTENT_USER_SINGLE;
                 break;
         }
         return type;
