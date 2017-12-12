@@ -2,6 +2,7 @@ package com.example.alina.todolist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -43,6 +44,8 @@ public class CreateTaskActivity extends BaseActivity implements
     private TextInputLayout descriptionWrapper;
     private EditText nameEditText;
     private EditText descriptionEditText;
+    private EditText latitudeEditText;
+    private EditText longitudeEditText;
     private TextView dateTextView;
     private RecyclerView subTaskRecycler;
     private SubTaskAdapter subTaskAdapter;
@@ -79,12 +82,18 @@ public class CreateTaskActivity extends BaseActivity implements
         descriptionEditText = (EditText) findViewById(R.id.descriptionText);
         subTaskRecycler = (RecyclerView) findViewById(R.id.subTaskRecycler);
         taskDateLayout = (LinearLayout) findViewById(R.id.taskDateLayout);
+        latitudeEditText = findViewById(R.id.latitudeEditText);
+        longitudeEditText = findViewById(R.id.longitudeEditText);
     }
 
     private void setData() {
         nameEditText.setText(task.getName());
         descriptionEditText.setText(task.getDescription());
         dateTextView.setText(task.getExpireDateString());
+        if (task.getLocation() != null){
+            latitudeEditText.setText(String.valueOf(task.getLocation().getLatitude()));
+            longitudeEditText.setText(String.valueOf(task.getLocation().getLongitude()));
+        }
     }
 
     private void fillData() {
@@ -176,6 +185,7 @@ public class CreateTaskActivity extends BaseActivity implements
     private void saveTask() {
         if (validate(nameWrapper) && validate(descriptionWrapper)) {
             fillData();
+            fillLocation();
             task.setSubTasks(subTaskAdapter.getSubTaskList());
             Intent result = new Intent();
             result.putExtra(BundleKey.TASK.name(), task);
@@ -183,6 +193,13 @@ public class CreateTaskActivity extends BaseActivity implements
             setResult(Activity.RESULT_OK, result);
             finish();
         }
+    }
+
+    private void fillLocation(){
+        Location location = new Location("");
+        location.setLatitude(Double.parseDouble(latitudeEditText.getText().toString()));
+        location.setLongitude(Double.parseDouble(longitudeEditText.getText().toString()));
+        task.setLocation(location);
     }
 
     private String getRootTaskStatus(){

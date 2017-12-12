@@ -1,6 +1,7 @@
 package com.example.alina.todolist.entities;
 
 
+import android.location.Location;
 import android.os.Parcel;
 
 import com.example.alina.todolist.validators.Constants;
@@ -24,9 +25,12 @@ public class Task extends TaskObject {
 
     private List<SubTask> subTasksList;
 
+    private Location location;
+
     public Task() {
         expireDate = new Date();
         subTasksList = new ArrayList<>();
+        location = new Location("");
     }
 
     public List<SubTask> getSubTasks() {
@@ -91,6 +95,14 @@ public class Task extends TaskObject {
         return count != 0 && count == getSubTasks().size();
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
     @Override
     public boolean isDone() {
         return super.isDone();
@@ -102,6 +114,7 @@ public class Task extends TaskObject {
         dest.writeString(this.name);
         dest.writeLong(this.expireDate != null ? this.expireDate.getTime() : -1);
         dest.writeTypedList(this.subTasksList);
+        location.writeToParcel(dest, flags);
     }
 
     protected Task(Parcel in) {
@@ -110,6 +123,7 @@ public class Task extends TaskObject {
         long tmpExpireDate = in.readLong();
         this.expireDate = tmpExpireDate == -1 ? null : new Date(tmpExpireDate);
         this.subTasksList = in.createTypedArrayList(SubTask.CREATOR);
+        this.location = Location.CREATOR.createFromParcel(in);
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {

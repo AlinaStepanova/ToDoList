@@ -87,13 +87,13 @@
                         style="@style/ItemTextViewLarge"
                         android:layout_height="wrap_content" />
                     <EditText
-                        android:id="@+id/taskLocationLat"
+                        android:id="@+id/latitudeEditText"
                         android:hint="@string/latitude"
                         android:inputType="numberDecimal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <EditText
-                        android:id="@+id/taskLocationLon"
+                        android:id="@+id/longitudeEditText"
                         android:hint="@string/longitude"
                         android:inputType="numberDecimal"
                         android:layout_width="wrap_content"
