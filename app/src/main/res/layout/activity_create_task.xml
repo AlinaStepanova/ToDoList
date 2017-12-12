@@ -75,6 +75,30 @@
                     <View style="@style/divider"/>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_marginBottom="24dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="@string/task_location_text"
+                        android:layout_width="wrap_content"
+                        style="@style/ItemTextViewLarge"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/taskLocationLat"
+                        android:hint="@string/latitude"
+                        android:inputType="numberDecimal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/taskLocationLon"
+                        android:hint="@string/longitude"
+                        android:inputType="numberDecimal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

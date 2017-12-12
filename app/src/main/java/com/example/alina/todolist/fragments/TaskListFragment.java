@@ -36,6 +36,7 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
 
     public interface TaskFragmentCallback{
         void onItemClick(Task task);
+        void onEditTaskClick(Task task);
     }
 
     public static TaskListFragment newInstance(List<Task> taskList) {
@@ -124,5 +125,11 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
         if (callback != null){
             callback.onItemClick(task);
         }
+    }
+
+    @Override
+    public void onEditClick(Task task) {
+        if (callback != null)
+            callback.onEditTaskClick(task);
     }
 }

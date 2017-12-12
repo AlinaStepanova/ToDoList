@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface OnItemClickListener {
         void onItemClick(Task task);
+        void onEditClick(Task task);
     }
 
     private List<Task> tasks;
@@ -91,6 +93,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView name;
         TextView description;
         TextView subTaskCount;
+        Button editTaskBtn;
         FrameLayout subTaskCountLayout;
 
         TaskViewHolderRunning(View itemView) {
@@ -99,11 +102,18 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             description = (TextView) itemView.findViewById(R.id.descriptionTextView);
             subTaskCount = (TextView) itemView.findViewById(R.id.subTaskCount);
             subTaskCountLayout = (FrameLayout) itemView.findViewById(R.id.subTaskCountLayout);
+            editTaskBtn = itemView.findViewById(R.id.editTaskBtn);
         }
 
         void bind(final Task task, final OnItemClickListener onItemClickListener) {
             name.setText(task.getName());
             description.setText(task.getDescription());
+            editTaskBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onEditClick(task);
+                }
+            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -122,6 +132,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView name;
         TextView description;
         TextView subTaskCount;
+        Button editTaskBtn;
         FrameLayout subTaskCountLayout;
 
         TaskViewHolderFinished(View itemView) {
@@ -130,11 +141,18 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             description = (TextView) itemView.findViewById(R.id.descriptionTextViewFinished);
             subTaskCount = (TextView) itemView.findViewById(R.id.subTaskCount);
             subTaskCountLayout = (FrameLayout) itemView.findViewById(R.id.subTaskCountLayout);
+            editTaskBtn = itemView.findViewById(R.id.editTaskBtn);
         }
 
         void bind(final Task task, final OnItemClickListener onItemClickListener) {
             name.setText(task.getName());
             description.setText(task.getDescription());
+            editTaskBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onEditClick(task);
+                }
+            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

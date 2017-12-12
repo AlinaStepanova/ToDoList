@@ -100,6 +100,13 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
 
     @Override
     public void onItemClick(Task task) {
+        Intent intent = new Intent(this, TaskActivity.class);
+        intent.putExtra(BundleKey.TASK.name(), task);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onEditTaskClick(Task task) {
         Intent intent = new Intent(this, CreateTaskActivity.class);
         intent.putExtra(BundleKey.TASK.name(), task);
         startActivityForResult(intent, ActivityRequest.UPDATE_TASK.ordinal());

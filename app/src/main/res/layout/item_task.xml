@@ -32,6 +32,13 @@
             android:textColor="@color/colorDescriptionBlack"/>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/editTaskBtn"
+        android:layout_gravity="center"
+        android:text="E"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <FrameLayout
         android:id="@+id/subTaskCountLayout"
         android:layout_marginStart="@dimen/min_margin"

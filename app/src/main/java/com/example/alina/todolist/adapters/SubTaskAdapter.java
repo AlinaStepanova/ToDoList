@@ -34,7 +34,8 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.SubTaskH
 
     public SubTaskAdapter(Context context){
         subTaskList = new ArrayList<>();
-        swipeCallback = (ItemSwipeCallback) context;
+        if (context instanceof ItemSwipeCallback)
+            swipeCallback = (ItemSwipeCallback) context;
     }
 
     public void addNewSubTask(SubTask subTask){

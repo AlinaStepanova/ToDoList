@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.alina.todolist.adapters.SubTaskAdapter;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
@@ -25,6 +27,8 @@ public class TaskActivity extends BaseActivity {
     private FloatingActionButton floatingActionButton;
     private Task task;
     private String nameTransition, descriptionTransition, categoryTransition;
+    private RecyclerView subTaskRecycler;
+    private SubTaskAdapter subTaskAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,10 @@ public class TaskActivity extends BaseActivity {
         descriptionTask = (TextView) findViewById(R.id.descriptionTask);
         categoryName = (TextView) findViewById(R.id.categoryName);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        subTaskRecycler = findViewById(R.id.subTaskRecycler);
+        subTaskRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        subTaskAdapter = new SubTaskAdapter(this);
+        subTaskRecycler.setAdapter(subTaskAdapter);
         setTransitions();
         fillData();
 
@@ -71,9 +79,15 @@ public class TaskActivity extends BaseActivity {
     private void fillData(){
         if(task != null){
             collapsingToolbarLayout.setTitle(task.getName());
-            descriptionTask.setText(task.getDescription() + "\n" + getString(R.string.large_text));
-            categoryName.setText(task.getCategory().getName());
-            ((GradientDrawable)categoryName.getBackground()).setStroke(8, task.getCategory().getColor());
+            descriptionTask.setText(task.getDescription());
+            if (task.getCategory() != null) {
+                categoryName.setText(task.getCategory().getName());
+                ((GradientDrawable) categoryName.getBackground()).setStroke(8, task.getCategory().getColor());
+            }
+            if (task.getSubTasks() != null && !task.getSubTasks().isEmpty()){
+                subTaskAdapter.addAllSubTask(task.getSubTasks());
+            }
+
         } else {
             finish();
         }
