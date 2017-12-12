@@ -18,5 +18,7 @@ public enum BundleKey {
     INDEX,
     USER,
     CURRENT_USER,
-    TASK_STATUS
+    TASK_STATUS,
+    TASK_NAME,
+    TASK_LOCATION
 }

@@ -124,4 +124,6 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="task_location_text">Enter location:</string>
+    <string name="show_on_map">Show on map</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

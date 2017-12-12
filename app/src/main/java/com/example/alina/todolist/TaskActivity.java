@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.alina.todolist.adapters.SubTaskAdapter;
@@ -29,6 +30,7 @@ public class TaskActivity extends BaseActivity {
     private String nameTransition, descriptionTransition, categoryTransition;
     private RecyclerView subTaskRecycler;
     private SubTaskAdapter subTaskAdapter;
+    private Button showOnMapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class TaskActivity extends BaseActivity {
         descriptionTask = (TextView) findViewById(R.id.descriptionTask);
         categoryName = (TextView) findViewById(R.id.categoryName);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        showOnMapButton = findViewById(R.id.showOnMapButton);
         subTaskRecycler = findViewById(R.id.subTaskRecycler);
         subTaskRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         subTaskAdapter = new SubTaskAdapter(this);
@@ -60,6 +63,18 @@ public class TaskActivity extends BaseActivity {
                 Intent intent = new Intent(TaskActivity.this, CreateTaskActivity.class);
                 intent.putExtra(BundleKey.TASK.name(), task);
                 startActivityForResult(intent, ActivityRequest.EDIT_TASK.ordinal());
+            }
+        });
+
+        showOnMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (task.getLocation() != null) {
+                    Intent mapIntent = new Intent(TaskActivity.this, MapsActivity.class);
+                    mapIntent.putExtra(BundleKey.TASK_LOCATION.name(), task.getLocation());
+                    mapIntent.putExtra(BundleKey.TASK_NAME.name(), task.getName());
+                    startActivity(mapIntent);
+                }
             }
         });
     }
