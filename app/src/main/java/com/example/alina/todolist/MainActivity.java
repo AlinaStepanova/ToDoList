@@ -5,8 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,8 +22,10 @@ import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.TaskListFragment;
+import com.example.alina.todolist.listeners.OnTaskClickListener;
+import com.example.alina.todolist.maps.GPSTracker;
 
-public class MainActivity extends BaseActivity implements TaskListFragment.TaskFragmentCallback{
+public class MainActivity extends BaseTimerActivity implements OnTaskClickListener,TaskListFragment.TaskFragmentCallback{
 
     private FloatingActionButton createTaskButton;
     private IDataSource dataSource;
@@ -33,8 +40,8 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
 
         initCreateTaskButton();
 
-        dataSource = new SharedPreferencesDataSource(getApplicationContext());
-
+        dataSource = new SharedPreferencesDataSource(this);
+        Log.d("TAG","in main "+ dataSource.getCurrentUser().getName());
         initViewPager();
     }
 
@@ -97,11 +104,65 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
         }else super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item_change_layout:
+           /*     gridLayout  = !gridLayout;
+                item.setTitle(gridLayout ? R.string.linear_layout : R.string.grid_layout);
+                setLayoutForRecyclerView();*/
+                break;
+            case R.id.go_to_category_activity:
+                setNeedCheckCurrentTime(false);
+                startActivityForResult(new Intent(this, CategoryActivity.class), ActivityRequest.WATCH_CATEGORY.ordinal());
+                break;
+            case R.id.log_out:
+                //dataSource.setCurrentUser(new User());
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
 
     @Override
-    public void onItemClick(Task task) {
+    public void onButtonEditClick(Task task) {
         Intent intent = new Intent(this, CreateTaskActivity.class);
         intent.putExtra(BundleKey.TASK.name(), task);
         startActivityForResult(intent, ActivityRequest.UPDATE_TASK.ordinal());
+    }
+
+    @Override
+    public void onItemClick(Task task) {
+        Intent intent = new Intent(this, TaskActivity.class);
+        intent.putExtra(BundleKey.TASK.name(), task);
+        startActivityForResult(intent, ActivityRequest.WATCH_TASK.ordinal());
+
+    }
+
+
+    @Override
+    public void onItemLongClick(Task task) {
+
+    }
+
+    @Override
+    public void onTaskClick(Task task, View view) {
+        View nameTextView = view.findViewById(R.id.nameTextView);
+        View descriptionTextView = view.findViewById(R.id.descriptionTextView);
+        View categoryTextView = view.findViewById(R.id.categoryTextView);
+        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                new Pair<>(nameTextView, ViewCompat.getTransitionName(nameTextView)),
+                new Pair<>(descriptionTextView, ViewCompat.getTransitionName(descriptionTextView)),
+                new Pair<>(categoryTextView, ViewCompat.getTransitionName(categoryTextView)));
+        Intent intent = new Intent(this, TaskActivity.class);
+        intent.putExtra(BundleKey.TASK.name(), task);
+        intent.putExtra(BundleKey.NAME_TRANSITION.name(), ViewCompat.getTransitionName(nameTextView));
+        intent.putExtra(BundleKey.DESCRIPTION_TRANSITION.name(), ViewCompat.getTransitionName(descriptionTextView));
+        intent.putExtra(BundleKey.CATEGORY_TRANSITION.name(), ViewCompat.getTransitionName(categoryTextView));
+        ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
     }
 }

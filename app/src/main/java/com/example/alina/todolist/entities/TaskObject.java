@@ -3,13 +3,15 @@ package com.example.alina.todolist.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.alina.todolist.data.database.DataBaseContract;
+
 import java.util.UUID;
 
 /**
  * Created by Alina on 02.11.2017.
  */
 
-public abstract class TaskObject implements Parcelable {
+public abstract class TaskObject implements Parcelable, DataBaseContract {
 
     public enum TaskStatus {
         NEW,
@@ -19,7 +21,7 @@ public abstract class TaskObject implements Parcelable {
     private String uuid;
     private String description;
     private TaskStatus status;
-    private Category category;
+
 
     public TaskObject() {
         status = TaskStatus.NEW;
@@ -33,14 +35,12 @@ public abstract class TaskObject implements Parcelable {
     public void writeToParcel (Parcel dest, int flags) {
         dest.writeString(this.uuid);
         dest.writeString(this.description);
-        dest.writeParcelable(this.category, flags);
         dest.writeInt(this.status == null ? -1 : this.status.ordinal());
     }
 
     protected TaskObject (Parcel in) {
         this.uuid = in.readString();
         this.description = in.readString();
-        this.category = in.readParcelable(Category.class.getClassLoader());
         int tmpStatus = in.readInt();
         this.status = tmpStatus == -1 ? null : TaskStatus.values()[tmpStatus];
     }
@@ -65,13 +65,12 @@ public abstract class TaskObject implements Parcelable {
         this.status = status;
     }
 
-
-    public Category getCategory() {
-        return category;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @Override

@@ -121,4 +121,10 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="choose_category">Choose category</string>
+    <string name="no_category_chosen">Choose category</string>
+
+    <string name="go_to_category">Go to category</string>
 </resources>

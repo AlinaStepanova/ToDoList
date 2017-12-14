@@ -32,4 +32,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'org.jetbrains:annotations-java5:15.0'
     compile 'com.bignerdranch.android:simple-item-decoration:1.0.0'
+    compile 'com.google.android.gms:play-services-location:10.+'
 }

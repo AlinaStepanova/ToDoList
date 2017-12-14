@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface OnItemClickListener {
         void onItemClick(Task task);
+        void onButtonEditClick(Task task);
     }
 
     private List<Task> tasks;
@@ -92,6 +94,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView description;
         TextView subTaskCount;
         FrameLayout container;
+        Button showMap;
 
 
         TaskViewHolderRunning(View itemView) {
@@ -100,6 +103,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             description = (TextView) itemView.findViewById(R.id.descriptionTextView);
             subTaskCount = (TextView) itemView.findViewById(R.id.subTaskCount);
             container = (FrameLayout) itemView.findViewById(R.id.subTaskCountContainer);
+            showMap = (Button) itemView.findViewById(R.id.editItemTask);
         }
 
         void bind(final Task task, final OnItemClickListener onItemClickListener) {
@@ -115,6 +119,13 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     onItemClickListener.onItemClick(task);
                 }
             });
+
+            showMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onButtonEditClick(task);
+                }
+            });
         }
     }
 
@@ -124,6 +135,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView description;
         TextView subTaskCount;
         FrameLayout container;
+        Button showMap;
 
         TaskViewHolderFinished(View itemView) {
             super(itemView);
@@ -131,6 +143,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             description = (TextView) itemView.findViewById(R.id.descriptionTextViewFinished);
             subTaskCount = (TextView) itemView.findViewById(R.id.subTaskCountFinished);
             container = (FrameLayout) itemView.findViewById(R.id.subTaskCountContainerFinished);
+            showMap = (Button) itemView.findViewById(R.id.editItemTaskFinished);
         }
 
         void bind(final Task task, final OnItemClickListener onItemClickListener) {
@@ -144,6 +157,13 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onItemClick(task);
+                }
+            });
+
+            showMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onButtonEditClick(task);
                 }
             });
         }

@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,9 +23,11 @@ import android.widget.Toast;
 
 import com.example.alina.todolist.adapters.ItemTouchHelperCallback;
 import com.example.alina.todolist.adapters.SubTaskAdapter;
+import com.example.alina.todolist.entities.Category;
 import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.entities.TaskObject;
+import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.enums.TaskState;
 import com.example.alina.todolist.fragments.AddSubTaskDialogFragment;
@@ -33,7 +36,7 @@ import com.example.alina.todolist.validators.Validator;
 
 import java.util.Date;
 
-public class CreateTaskActivity extends BaseActivity implements
+public class CreateTaskActivity extends BaseTimerActivity implements
         DatePickerFragment.OnDateSelectedListener,
         AddSubTaskDialogFragment.CreateSubTaskDialogListener,
         SubTaskAdapter.ItemSwipeCallback{
@@ -44,6 +47,10 @@ public class CreateTaskActivity extends BaseActivity implements
     private EditText nameEditText;
     private EditText descriptionEditText;
     private TextView dateTextView;
+    private TextInputLayout categoryWrapper;
+    private TextView categoryTextView;
+    private Category currentCategory;
+
     private RecyclerView subTaskRecycler;
     private SubTaskAdapter subTaskAdapter;
     private LinearLayout taskDateLayout;
@@ -51,6 +58,12 @@ public class CreateTaskActivity extends BaseActivity implements
             .setNotEmpty()
             .setMinLength(3)
             .build();
+
+    private TextInputLayout latitudeWrapper;
+    private TextInputLayout longitudeWrapper;
+    private EditText latitudeEditText;
+    private EditText longitudeEditText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,17 +92,37 @@ public class CreateTaskActivity extends BaseActivity implements
         descriptionEditText = (EditText) findViewById(R.id.descriptionText);
         subTaskRecycler = (RecyclerView) findViewById(R.id.subTaskRecycler);
         taskDateLayout = (LinearLayout) findViewById(R.id.taskDateLayout);
+
+        latitudeWrapper = (TextInputLayout) findViewById(R.id.latitudeWrapper);
+        latitudeEditText = (EditText) findViewById(R.id.latitude);
+        longitudeEditText = (EditText) findViewById(R.id.longitude);
+        longitudeWrapper = (TextInputLayout) findViewById(R.id.longitudeWrapper);
+        categoryWrapper =  (TextInputLayout) findViewById(R.id.categoryWrapper);
+        categoryTextView = (TextView) findViewById(R.id.categoryTextView);
+
+        categoryWrapper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setNeedCheckCurrentTime(false);
+                startActivityForResult(CategoryActivity.launchInEditMode(getApplicationContext()),
+                        ActivityRequest.GET_CATEGORY.ordinal());
+            }
+        });
     }
 
     private void setData() {
         nameEditText.setText(task.getName());
         descriptionEditText.setText(task.getDescription());
         dateTextView.setText(task.getExpireDateString());
+        latitudeEditText.setText(String.valueOf(task.getLatitude()));
+        longitudeEditText.setText(String.valueOf(task.getLongitude()));
     }
 
     private void fillData() {
         task.setName(nameEditText.getText().toString());
         task.setDescription(descriptionEditText.getText().toString());
+        task.setLatitude(Double.parseDouble(latitudeEditText.getText().toString()));
+        task.setLongitude(Double.parseDouble(longitudeEditText.getText().toString()));
     }
 
     private void showEditDialog() {
@@ -151,6 +184,7 @@ public class CreateTaskActivity extends BaseActivity implements
         switch (item.getItemId()) {
             case R.id.item_save:
                 saveTask();
+                Log.d("TAG", task.getLatitude()+" "+ task.getLongitude());
                 return true;
             case R.id.item_done_task:
                 setTaskDone();
@@ -173,8 +207,29 @@ public class CreateTaskActivity extends BaseActivity implements
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (ActivityRequest.values()[requestCode]){
+            case GET_CATEGORY:
+                if(resultCode == Activity.RESULT_OK){
+                    currentCategory = data.getParcelableExtra(BundleKey.CATEGORY.name());
+                    if (currentCategory != null) {
+                        task.setCategory(currentCategory);
+                        categoryTextView.setText(currentCategory.getName());
+                        categoryTextView.setTextColor(currentCategory.getColor());
+                    }
+                }
+                if(resultCode == Activity.RESULT_CANCELED){
+                    setResult(Activity.RESULT_CANCELED);
+                    finish();
+                }
+                break;
+        }
+    }
+
     private void saveTask() {
-        if (validate(nameWrapper) && validate(descriptionWrapper)) {
+        if (validateText(nameWrapper) && validateText(descriptionWrapper) && validate()) {
             fillData();
             task.setSubTasks(subTaskAdapter.getSubTaskList());
             Intent result = new Intent();
@@ -197,7 +252,7 @@ public class CreateTaskActivity extends BaseActivity implements
         return status;
     }
 
-    private boolean validate(TextInputLayout wrapper) {
+    private boolean validateText(TextInputLayout wrapper) {
         wrapper.setErrorEnabled(false);
         boolean result = stringValidator.validate(wrapper.getEditText().getText().toString(),
                 wrapper.getHint().toString());
@@ -208,10 +263,29 @@ public class CreateTaskActivity extends BaseActivity implements
         return result;
     }
 
+    private boolean validate(){
+        boolean result = validateText(nameWrapper) & validateText(descriptionWrapper);
+        categoryWrapper.setErrorEnabled(false);
+        if(currentCategory == null){
+            categoryWrapper.setErrorEnabled(true);
+            categoryWrapper.setError(getString(R.string.no_category_chosen));
+            result = false;
+        }
+        return result;
+    }
+
     public void showDatePickerDialog() {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
+
+
+    public void openCategoryActivity(View v){
+        setNeedCheckCurrentTime(false);
+        startActivityForResult(CategoryActivity.launchInEditMode(this),
+                ActivityRequest.GET_CATEGORY.ordinal());
+    }
+
 
     @Override
     public void onDateSelected(Date date) {

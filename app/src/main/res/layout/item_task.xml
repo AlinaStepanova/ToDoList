@@ -31,7 +31,15 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:background="@drawable/sh_square_round_left_corner_black"/>
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/editItemTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit" />
+
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

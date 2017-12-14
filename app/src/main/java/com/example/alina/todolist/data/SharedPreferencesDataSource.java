@@ -7,6 +7,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.alina.todolist.entities.Category;
 import com.example.alina.todolist.entities.Task;
@@ -49,6 +50,7 @@ public class SharedPreferencesDataSource implements IDataSource {
         }
 
         String jsonCurrentUser = sharedPreferences.getString(CURRENT, null);
+        Log.d("TAG","in SH "+ jsonCurrentUser);
         if (!TextUtils.isEmpty(jsonCurrentUser)) {
             currentUser = gson.fromJson(jsonCurrentUser, User.class);
 
@@ -57,6 +59,9 @@ public class SharedPreferencesDataSource implements IDataSource {
                 Type typeCategories = new TypeToken<ArrayList<Category>>() {
                 }.getType();
                 categories = gson.fromJson(jsonCategories, typeCategories);
+                if(categories == null){
+                    categories = new ArrayList<>();
+                }
                 currentUser.setCategories(categories);
             }
 
@@ -119,34 +124,16 @@ public class SharedPreferencesDataSource implements IDataSource {
         return id;
     }
 
-    @Override
-    public User getCurrentUser() {
-        return null;
-    }
 
-    @Override
-    public ArrayList<User> getUserList() {
-        return null;
-    }
-
-    @Override
-    public boolean setCurrentUser(@NonNull User user) {
-        return false;
-    }
-
-    @Override
-    public boolean addUser(@NonNull User user) {
-        return false;
-    }
-
-    @Override
-    public void saveCurrentUser() {
-
-    }
 
     @Override
     public ArrayList<Task> getTaskList() {
-        return currentUser.getTasks();
+     /*   ArrayList<Task> list =
+        if (list == null){
+            list = new ArrayList<>();
+        }*/
+
+        return currentUser== null ? new ArrayList<Task>() : currentUser.getTasks();
     }
 
     @Override
@@ -158,6 +145,7 @@ public class SharedPreferencesDataSource implements IDataSource {
     public boolean setCurrentUser(@NonNull User user) {
         editor = sharedPreferences.edit();
         editor.putString(CURRENT, gson.toJson(user));
+        Log.d("TAG","in SHSetCURR "+ gson.toJson(user));
         return editor.commit();
     }
 
@@ -216,7 +204,7 @@ public class SharedPreferencesDataSource implements IDataSource {
         }
         users.set(userNumber, currentUser);
         editor = sharedPreferences.edit();
-        editor.putString(USERS, gson.toJson(users)).apply();
+        editor.putString(USERS, gson.toJson(users)).commit();
     }
 
     @Override

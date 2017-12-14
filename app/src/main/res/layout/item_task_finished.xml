@@ -14,13 +14,13 @@
             android:layout_height="wrap_content"
             android:text="@string/text_name_view"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
-            android:textColor="@color/ExpiredTaskColor"/>
+            android:textColor="@color/colorExpiredTaskColor"/>
         <TextView
             android:id="@+id/descriptionTextViewFinished"
             style="@style/ItemTextViewSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/ExpiredTaskColorBackground"
+            android:background="@color/colorExpiredTaskColorBackground"
             android:text="@string/text_description_view"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"
             android:textColor="@color/colorDescriptionBlack"/>
@@ -32,6 +32,13 @@
             android:layout_height="wrap_content"
             android:background="@drawable/sh_square_round_left_corner_black"/>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/editItemTaskFinished"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit" />
+
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

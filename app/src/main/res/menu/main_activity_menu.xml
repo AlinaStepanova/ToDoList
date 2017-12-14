@@ -6,4 +6,12 @@
         app:showAsAction="always"
         android:titleCondensed="Change Layout"
         android:title="@string/change_layout"/>
+    <item
+        android:id="@+id/go_to_category_activity"
+        android:title="@string/go_to_category"
+        />
+    <item
+        android:id="@+id/log_out"
+        android:title="Logout"
+        />
 </menu>

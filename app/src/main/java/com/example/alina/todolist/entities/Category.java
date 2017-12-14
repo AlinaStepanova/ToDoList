@@ -1,8 +1,13 @@
 package com.example.alina.todolist.entities;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.example.alina.todolist.data.database.DataBaseContract;
+import com.example.alina.todolist.data.database.DataBaseManager;
 
 import java.util.Random;
 
@@ -10,11 +15,15 @@ import java.util.Random;
  * Created by gromi on 11/22/2017.
  */
 
-public class Category implements Parcelable {
+public class Category implements Parcelable, DataBaseContract {
 
     private String name;
     private int color;
     private long id;
+
+    public Category(){
+
+    }
 
     public Category(String name){
         this.name = name;
@@ -80,5 +89,31 @@ public class Category implements Parcelable {
             }
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return  "Category{" +
+                "name='" + name + '\'' +
+                ", color=" + color +
+                ", id=" + id + " " +
+                '}';
+    }
+
+    @Override
+    public void initByCursor(Cursor cursor) {
+        this.id = cursor.getLong(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_ID_NAME));
+        this.name = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_NAME));
+        this.color = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_COLOR));
+    }
+
+    @Override
+    public ContentValues toContentValues() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DataBaseManager.COLUMN_CATEGORY_ID_NAME, this.id);
+
+        contentValues.put(DataBaseManager.COLUMN_CATEGORY_NAME, this.name);
+        contentValues.put(DataBaseManager.COLUMN_CATEGORY_COLOR, this.color);
+        return null;
     }
 }

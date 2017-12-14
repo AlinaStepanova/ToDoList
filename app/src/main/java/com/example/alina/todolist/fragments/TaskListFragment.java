@@ -36,6 +36,7 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
     private TaskFragmentCallback callback;
 
     public interface TaskFragmentCallback{
+        void onButtonEditClick(Task task);
         void onItemClick(Task task);
         void onItemLongClick(Task task);
     }
@@ -90,7 +91,7 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.layout_editor, menu);
+        inflater.inflate(R.menu.main_activity_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -125,9 +126,11 @@ public class TaskListFragment extends Fragment implements TaskAdapter.OnItemClic
     }
 
     @Override
-    public void onItemLongClick(Task task) {
-        if(callback != null) {
-            callback.onItemLongClick(task);
+    public void onButtonEditClick(Task task) {
+        if(callback != null){
+            callback.onButtonEditClick(task);
         }
     }
+
+
 }

@@ -23,7 +23,7 @@ import com.example.alina.todolist.listeners.OnDataChangedListener;
 
 import java.util.List;
 
-public class CategoryActivity extends BaseActivity implements SearchView.OnQueryTextListener,
+public class CategoryActivity extends BaseTimerActivity implements SearchView.OnQueryTextListener,
         OnCategoryClickListener, OnDataChangedListener {
 
     public static Intent launchInEditMode(Context context){

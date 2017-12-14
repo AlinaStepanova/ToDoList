@@ -2,15 +2,15 @@ package com.example.alina.todolist;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
-import com.example.alina.todolist.enums.Constants;
+import com.example.alina.todolist.validators.Constants;
 
-public abstract class BaseTimerActivity extends AppCompatActivity {
+public abstract class BaseTimerActivity extends BaseLocationActivity {
 
     private long currentTime;
     private boolean needCheckCurrentTime = false;
@@ -30,6 +30,10 @@ public abstract class BaseTimerActivity extends AppCompatActivity {
             finish();
         }
         Log.d("RESULTS", resultCode+"  BASE");
+        if(requestCode > (ActivityRequest.values().length-1))
+        {
+            return;
+        }
         switch (ActivityRequest.values()[requestCode]) {
             case CHECK_PASSWORD:
                 if (resultCode != Activity.RESULT_OK) {

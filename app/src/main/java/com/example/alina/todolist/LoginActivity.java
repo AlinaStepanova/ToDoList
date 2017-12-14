@@ -1,13 +1,15 @@
 package com.example.alina.todolist;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
-import com.example.alina.todolist.data.FileDataSource;
 import com.example.alina.todolist.data.IDataSource;
+import com.example.alina.todolist.data.SharedPreferencesDataSource;
 import com.example.alina.todolist.entities.User;
 import com.example.alina.todolist.fragments.LoginFragment;
 import com.example.alina.todolist.fragments.UserEmailFragment;
@@ -20,16 +22,14 @@ import java.util.ArrayList;
 
 import static com.example.alina.todolist.enums.BundleKey.NEED_CHECK_PASSWORD;
 
-public class LoginActivity extends BaseActivity implements LoginFragment.NeedRegistrationListener,
+public class LoginActivity extends BaseTimerActivity implements LoginFragment.NeedRegistrationListener,
         UserNameFragment.GetNameFromFragment, UserEmailFragment.GetEmailFromFragment, UserPinFragment.GetPinFromFragment,
         UserWelcomeFragment.RunMainActivity, OnDataChangedListener {
 
     private static final String CURRENT = "current";
     public static boolean NEED_REFRESH_PIN = true;
-
     private User currentUser;
     private IDataSource dataSource;
-
     private Intent intent;
 
 
@@ -38,6 +38,11 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if(checkSelfPermission()){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},100);
+        }
         intent = getIntent();
 
         if (savedInstanceState == null && !intent.getBooleanExtra(NEED_CHECK_PASSWORD.name(), false)) {
@@ -49,16 +54,27 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
             NEED_REFRESH_PIN = true;
         }
 
-        if (intent.getBooleanExtra(NEED_CHECK_PASSWORD.name(), false)&& NEED_REFRESH_PIN) {
+        if (intent.getBooleanExtra(NEED_CHECK_PASSWORD.name(), false) && NEED_REFRESH_PIN) {
             getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_rigth,R.anim.slide_in_left, R.anim.slide_out_rigth)
+                    .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_rigth, R.anim.slide_in_left, R.anim.slide_out_rigth)
                     .replace(R.id.userFragmentContainer, new UserPinFragment())
                     .commit();
             NEED_REFRESH_PIN = false;
         }
 
-        dataSource = new FileDataSource(this, this);
+        dataSource = new SharedPreferencesDataSource(this);
+
+
+        // Log.d("TAG", tracker.getLatitude() + " " + tracker.getLongitude());
     }
+
+    private boolean checkSelfPermission(){
+        return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED || ActivityCompat
+                .checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED);
+    }
+
 
     @Override
     public void notifyDataChanged() {
@@ -151,4 +167,5 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
+
 }
