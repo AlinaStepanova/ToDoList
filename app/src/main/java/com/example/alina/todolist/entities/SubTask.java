@@ -1,12 +1,15 @@
 package com.example.alina.todolist.entities;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 
-/**
- * Created by Alina on 02.11.2017.
- */
+import com.example.alina.todolist.db.DataBaseContract;
+import com.example.alina.todolist.db.DataBaseManager;
 
 public class SubTask extends TaskObject {
+
+    private int taskId;
 
     public SubTask() {
         super();
@@ -32,4 +35,13 @@ public class SubTask extends TaskObject {
             return new SubTask[0];
         }
     };
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public SubTask setTaskId(int taskId) {
+        this.taskId = taskId;
+        return this;
+    }
 }

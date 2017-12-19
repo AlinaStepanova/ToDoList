@@ -14,7 +14,7 @@ public final class Constants {
 
     private static final String DATE_FORMAT_STRING = "dd MMMM yyyy";
     public  static  final SimpleDateFormat DATE_FORMAT;
-    public static final long TimeForCheckPassword = TimeUnit.SECONDS.toMillis(30);
+    public static final long TimeForCheckPassword = TimeUnit.SECONDS.toMillis(300000);
 
     static {
         DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.getDefault());

@@ -6,6 +6,7 @@ package com.example.alina.todolist.enums;
 
 public enum BundleKey {
     TASK,
+    TASK_LIST,
     CATEGORY,
     NEED_CHECK_PASSWORD,
     EDIT_MODE,
@@ -18,5 +19,13 @@ public enum BundleKey {
     INDEX,
     USER,
     CURRENT_USER,
-    TASK_STATUS
+    TASK_STATUS,
+    PROJECTION,
+    SELECTION,
+    SELECTION_ARGS,
+    SORT_ORDER,
+    URI,
+    CONTENT_VALUES,
+    DB_INTERACTION_TYPE,
+    LOCATION,
 }

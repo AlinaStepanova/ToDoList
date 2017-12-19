@@ -6,17 +6,23 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.alina.todolist.adapters.TaskFragmentPagerAdapter;
-import com.example.alina.todolist.data.FileDataSource;
+import com.example.alina.todolist.data.DataBaseDataSource;
+import com.example.alina.todolist.data.DataSourceFactory;
+import com.example.alina.todolist.data.FirebaseDataSource;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.entities.Task;
+import com.example.alina.todolist.entities.User;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.TaskListFragment;
 import com.example.alina.todolist.listeners.OnDataChangedListener;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends BaseActivity implements TaskListFragment.TaskFragmentCallback, OnDataChangedListener{
 
@@ -33,7 +39,8 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
 
         initCreateTaskButton();
 
-        dataSource = new FileDataSource(this, this);
+        DataSourceFactory factory = new DataSourceFactory(this, this);
+        dataSource = factory.createDataSource();
 
         initViewPager();
     }
@@ -97,6 +104,24 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
         }else super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item_category_activity:
+                setNeedCheckCurrentTime(false);
+                startActivityForResult(CategoryActivity.launch(this), ActivityRequest.WATCH_CATEGORY.ordinal());
+                break;
+            case R.id.item_map_activity:
+                startActivity(new Intent(MainActivity.this, MapsActivity.class));
+                break;
+            case R.id.item_sign_out:
+                FirebaseAuth.getInstance().signOut();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
 
     @Override
     public void onItemClick(Task task) {

@@ -2,6 +2,7 @@ package com.example.alina.todolist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,9 +23,12 @@ import android.widget.Toast;
 
 import com.example.alina.todolist.adapters.ItemTouchHelperCallback;
 import com.example.alina.todolist.adapters.SubTaskAdapter;
+import com.example.alina.todolist.entities.Category;
+import com.example.alina.todolist.entities.LatLng;
 import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.entities.TaskObject;
+import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.enums.TaskState;
 import com.example.alina.todolist.fragments.AddSubTaskDialogFragment;
@@ -39,11 +43,14 @@ public class CreateTaskActivity extends BaseActivity implements
         SubTaskAdapter.ItemSwipeCallback{
 
     private Task task;
+    private Category currentCategory;
     private TextInputLayout nameWrapper;
     private TextInputLayout descriptionWrapper;
+    private TextInputLayout categoryWrapper;
     private EditText nameEditText;
     private EditText descriptionEditText;
     private TextView dateTextView;
+    private TextView categoryTextView;
     private RecyclerView subTaskRecycler;
     private SubTaskAdapter subTaskAdapter;
     private LinearLayout taskDateLayout;
@@ -79,6 +86,8 @@ public class CreateTaskActivity extends BaseActivity implements
         descriptionEditText = (EditText) findViewById(R.id.descriptionText);
         subTaskRecycler = (RecyclerView) findViewById(R.id.subTaskRecycler);
         taskDateLayout = (LinearLayout) findViewById(R.id.taskDateLayout);
+        categoryWrapper = (TextInputLayout) findViewById(R.id.categoryWrapper);
+        categoryTextView = (TextView) findViewById(R.id.categoryTextView);
     }
 
     private void setData() {
@@ -174,9 +183,11 @@ public class CreateTaskActivity extends BaseActivity implements
     }
 
     private void saveTask() {
-        if (validate(nameWrapper) && validate(descriptionWrapper)) {
+        if (validate()) {
             fillData();
             task.setSubTasks(subTaskAdapter.getSubTaskList());
+            Location location = getCurrentLocation();
+            task.setLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
             Intent result = new Intent();
             result.putExtra(BundleKey.TASK.name(), task);
             result.putExtra(BundleKey.TASK_STATUS.name(), getRootTaskStatus());
@@ -197,13 +208,24 @@ public class CreateTaskActivity extends BaseActivity implements
         return status;
     }
 
-    private boolean validate(TextInputLayout wrapper) {
+    private boolean validateText(TextInputLayout wrapper) {
         wrapper.setErrorEnabled(false);
         boolean result = stringValidator.validate(wrapper.getEditText().getText().toString(),
                 wrapper.getHint().toString());
         if (!result) {
             wrapper.setErrorEnabled(true);
             wrapper.setError(stringValidator.getLastMessage());
+        }
+        return result;
+    }
+
+    private boolean validate(){
+        boolean result = validateText(nameWrapper) & validateText(descriptionWrapper);
+        categoryWrapper.setErrorEnabled(false);
+        if(currentCategory == null){
+            categoryWrapper.setErrorEnabled(true);
+            categoryWrapper.setError(getString(R.string.no_category_chosen));
+            result = false;
         }
         return result;
     }
@@ -233,5 +255,28 @@ public class CreateTaskActivity extends BaseActivity implements
                         subTaskAdapter.restoreRemovedItem();
                     }
                 }).show();
+    }
+
+    public void openCategoryActivity(View v){
+        setNeedCheckCurrentTime(false);
+        startActivityForResult(CategoryActivity.launchInPickMode(this),
+                ActivityRequest.GET_CATEGORY.ordinal());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (ActivityRequest.values()[requestCode]){
+            case GET_CATEGORY:
+                if(resultCode == Activity.RESULT_OK){
+                    currentCategory = data.getParcelableExtra(BundleKey.CATEGORY.name());
+                    if (currentCategory != null) {
+                        task.setCategory(currentCategory);
+                        categoryTextView.setText(currentCategory.getName());
+                        categoryTextView.setTextColor(currentCategory.getColor());
+                    }
+                }
+                break;
+        }
     }
 }

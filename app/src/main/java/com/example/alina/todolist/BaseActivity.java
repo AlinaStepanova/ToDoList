@@ -1,11 +1,18 @@
 package com.example.alina.todolist;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.alina.todolist.data.DataBaseDataSource;
+import com.example.alina.todolist.data.DataBaseSourceBuilder;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.validators.Constants;
@@ -14,10 +21,24 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private long currentTime;
     private boolean needCheckCurrentTime = false;
+    private BroadcastReceiver receiver;
+    private Location currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getExtras() != null) {
+                    currentLocation = intent.getExtras().getParcelable(BundleKey.LOCATION.name());
+                    Log.i("ACTIVITY", currentLocation.toString());
+                }
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter(BundleKey.LOCATION.name());
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+        startService(new Intent(this, LocationService.class));
     }
 
     @Override
@@ -63,5 +84,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void setNeedCheckCurrentTime(boolean needToCheck){
         this.needCheckCurrentTime = needToCheck;
+    }
+
+    protected Location getCurrentLocation(){
+        return currentLocation;
     }
 }

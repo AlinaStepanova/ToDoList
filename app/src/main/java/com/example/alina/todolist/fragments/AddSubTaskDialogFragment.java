@@ -18,10 +18,6 @@ import com.example.alina.todolist.R;
 import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.validators.Validator;
 
-/**
- * Created by Alina on 22.11.2017.
- */
-
 public class AddSubTaskDialogFragment extends DialogFragment {
 
     public interface CreateSubTaskDialogListener {

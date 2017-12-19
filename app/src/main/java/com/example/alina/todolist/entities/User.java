@@ -1,12 +1,17 @@
 package com.example.alina.todolist.entities;
 
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.alina.todolist.db.DataBaseContract;
+import com.example.alina.todolist.db.DataBaseManager;
+
 import java.util.ArrayList;
 
-public class User implements Parcelable {
+public class User implements Parcelable, DataBaseContract{
     private String name;
     private String email;
     private String pin;
@@ -47,6 +52,21 @@ public class User implements Parcelable {
         parcel.readTypedList(this.categories, Category.CREATOR);
     }
 
+    @Override
+    public void initByCursor(Cursor cursor) {
+        this.name = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_USER_NAME));
+        this.email = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_USER_EMAIL));
+        this.pin = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_USER_PIN));
+    }
+
+    @Override
+    public ContentValues toContentValues() {
+        ContentValues values = new ContentValues();
+        values.put(DataBaseManager.COLUMN_USER_NAME, name);
+        values.put(DataBaseManager.COLUMN_USER_EMAIL, email);
+        values.put(DataBaseManager.COLUMN_USER_PIN, pin);
+        return values;
+    }
 
     public void setName(String name) {
         this.name = name;
