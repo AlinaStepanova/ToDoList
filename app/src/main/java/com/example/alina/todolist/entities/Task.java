@@ -8,13 +8,11 @@ import android.os.Parcel;
 import com.example.alina.todolist.db.DataBaseContract;
 import com.example.alina.todolist.db.DataBaseManager;
 import com.example.alina.todolist.validators.Constants;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 
@@ -28,6 +26,8 @@ public class Task extends TaskObject implements DataBaseContract{
     private List<SubTask> subTasksList;
 
     private Category category;
+
+    private LatLng latLng;
 
     public Task() {
         expireDate = new Date();
@@ -70,7 +70,7 @@ public class Task extends TaskObject implements DataBaseContract{
             long hours = TimeUnit.HOURS.convert(difference, TimeUnit.MILLISECONDS);
             long days = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
             if (days != 0) {
-                result = String.format(Locale.getDefault(), "%d, day%s", (days > 1) ? "s" : "");
+                result = String.format(Locale.getDefault(), "%d, day%s", days, (days > 1) ? "s" : "");
             } else {
                 if (hours != 0) {
                     result = (hours > 1) ? hours + " hours" : "1 hour";
@@ -108,6 +108,7 @@ public class Task extends TaskObject implements DataBaseContract{
         dest.writeString(this.name);
         dest.writeLong(this.expireDate != null ? this.expireDate.getTime() : -1);
         dest.writeTypedList(this.subTasksList);
+        dest.writeParcelable(this.latLng, flags);
     }
 
     protected Task(Parcel in) {
@@ -117,6 +118,7 @@ public class Task extends TaskObject implements DataBaseContract{
         long tmpExpireDate = in.readLong();
         this.expireDate = tmpExpireDate == -1 ? null : new Date(tmpExpireDate);
         this.subTasksList = in.createTypedArrayList(SubTask.CREATOR);
+        this.latLng = in.readParcelable(LatLng.class.getClassLoader());
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -135,12 +137,20 @@ public class Task extends TaskObject implements DataBaseContract{
     public void initByCursor(final Cursor cursor) {
         super.initByCursor(cursor);
         this.name = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_NAME));
+        this.category = new Category();
+        this.category.initByCursor(cursor);
+        double lat = cursor.getDouble(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_LATITUDE));
+        double lng = cursor.getDouble(cursor.getColumnIndex(DataBaseManager.COLUMN_TASK_LONGITUDE));
+        this.latLng = new LatLng(lat, lng);
     }
 
     @Override
     public ContentValues toContentValues() {
         ContentValues contentValues = super.toContentValues();
         contentValues.put(DataBaseManager.COLUMN_TASK_NAME, name);
+        contentValues.put(DataBaseManager.COLUMN_TASK_CATEGORY_ID, category.getId());
+        contentValues.put(DataBaseManager.COLUMN_TASK_LATITUDE, latLng.getLatitude());
+        contentValues.put(DataBaseManager.COLUMN_TASK_LONGITUDE, latLng.getLongitude());
         return contentValues;
     }
 
@@ -152,6 +162,14 @@ public class Task extends TaskObject implements DataBaseContract{
         this.category = category;
     }
 
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public Task setLatLng(LatLng latLng) {
+        this.latLng = latLng;
+        return this;
+    }
 
     @Override
     public String toString() {

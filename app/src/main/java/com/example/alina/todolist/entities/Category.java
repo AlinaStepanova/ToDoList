@@ -23,6 +23,12 @@ public class Category implements Parcelable, DataBaseContract {
     private long id;
     private int userId;
 
+    public Category(){
+        Random random = new Random();
+        this.color = Color.argb(255, random.nextInt(256), random.nextInt(256),
+                random.nextInt(256));
+    }
+
     public Category(String name){
         this.name = name;
         Random random = new Random();
@@ -42,6 +48,7 @@ public class Category implements Parcelable, DataBaseContract {
         this.id = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_ID));
         this.color = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_COLOR));
         this.name = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_NAME));
+//        this.userId = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_USERID));
     }
 
     @Override
@@ -91,6 +98,25 @@ public class Category implements Parcelable, DataBaseContract {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Category setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Category setColor(int color) {
+        this.color = color;
+        return this;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public Category setUserId(int userId) {
+        this.userId = userId;
+        return this;
     }
 
     @Override

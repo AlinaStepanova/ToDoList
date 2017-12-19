@@ -1,17 +1,26 @@
 package com.example.alina.todolist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.alina.todolist.data.DataBaseDataSource;
+import com.example.alina.todolist.data.DataSourceFactory;
 import com.example.alina.todolist.data.FileDataSource;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.db.ContentProviderValues;
 import com.example.alina.todolist.db.DataBaseManager;
+import com.example.alina.todolist.entities.Category;
 import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.entities.TaskObject;
@@ -25,14 +34,16 @@ import com.example.alina.todolist.listeners.OnDataChangedListener;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 import static com.example.alina.todolist.enums.BundleKey.NEED_CHECK_PASSWORD;
 
 public class LoginActivity extends BaseActivity implements LoginFragment.NeedRegistrationListener,
         UserNameFragment.GetNameFromFragment, UserEmailFragment.GetEmailFromFragment, UserPinFragment.GetPinFromFragment,
-        UserWelcomeFragment.RunMainActivity, OnDataChangedListener {
+        UserWelcomeFragment.RunMainActivity {
 
     private static final String CURRENT = "current";
+    private static final int PERMISSION_REQUEST_FINE_LOCATION = 4546;
     public static boolean NEED_REFRESH_PIN = true;
 
     private User currentUser;
@@ -45,24 +56,17 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
-        ArrayList<SubTask> subTasks = new ArrayList<>();
-        for (int i = 0; i < 40; i++){
-            SubTask subTask = new SubTask();
-            subTask.setDescription("asdasd" + i*300);
-            subTask.setStatus(TaskObject.TaskStatus.NEW);
-            subTask.setId(3);
-        }
-        Task task = new Task();
-        task.setSubTasks(subTasks);
-        getContentResolver().
-
-
-
-
-
         intent = getIntent();
+
+        askForPermissions();
+
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if(activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+            startActivity(new Intent(LoginActivity.this, LoginActivityFirebase.class));
+            finish();
+        }
 
         if (savedInstanceState == null && !intent.getBooleanExtra(NEED_CHECK_PASSWORD.name(), false)) {
             LoginFragment loginFragment = new LoginFragment();
@@ -81,13 +85,19 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
             NEED_REFRESH_PIN = false;
         }
 
-        dataSource = new FileDataSource(this, this);
+        DataSourceFactory factory = new DataSourceFactory(this, null);
+        dataSource = factory.createDataSource();
     }
 
-    @Override
-    public void notifyDataChanged() {
-
-    }
+    private void askForPermissions(){
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST_FINE_LOCATION);
+            }
+        }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -174,5 +184,19 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
         dataSource.setCurrentUser(currentUser);
         startActivity(new Intent(this, MainActivity.class));
         finish();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length <= 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    finish();
+                }
+            }
+        }
     }
 }

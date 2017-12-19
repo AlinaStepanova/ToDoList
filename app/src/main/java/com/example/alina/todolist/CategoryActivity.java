@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import android.widget.SearchView;
 
 import com.example.alina.todolist.adapters.CategoryAdapter;
+import com.example.alina.todolist.data.DataBaseDataSource;
+import com.example.alina.todolist.data.DataSourceFactory;
+import com.example.alina.todolist.data.FirebaseDataSource;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.data.SharedPreferencesDataSource;
 import com.example.alina.todolist.entities.Category;
@@ -26,15 +29,14 @@ import java.util.List;
 public class CategoryActivity extends BaseActivity implements SearchView.OnQueryTextListener,
         OnCategoryClickListener, OnDataChangedListener {
 
-    public static Intent launchInEditMode(Context context){
+    public static Intent launchInPickMode(Context context){
         Intent intent = new Intent(context, CategoryActivity.class);
         intent.putExtra(BundleKey.EDIT_MODE.name(), true);
         return intent;
     }
 
     public static Intent launch(Context context){
-        Intent intent = new Intent(context, CategoryActivity.class);
-        return intent;
+        return new Intent(context, CategoryActivity.class);
     }
 
     private static final String CURRENT_FILTER = "currentFilter";
@@ -51,7 +53,8 @@ public class CategoryActivity extends BaseActivity implements SearchView.OnQuery
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
-        dataSource = new SharedPreferencesDataSource(this);
+        DataSourceFactory factory = new DataSourceFactory(this, this);
+        dataSource = factory.createDataSource();
         categories = dataSource.getCategoryList();
         initCategoryAdapter();
         initCategoryRecycler();

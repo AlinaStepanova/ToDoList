@@ -8,30 +8,30 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 import com.example.alina.todolist.db.ContentProviderValues;
-import com.example.alina.todolist.entities.Task;
+import com.example.alina.todolist.entities.Category;
 import com.example.alina.todolist.enums.BundleKey;
 
 import java.util.ArrayList;
 
-public class TaskLoader implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CategoryLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int LOADER_ID = 1;
+    private static final int LOADER_ID = 3;
 
     private final Context context;
 
     private final LoaderManager loaderManager;
 
-    private OnEntitiesLoad<Task> onTaskLoad;
+    private OnEntitiesLoad<Category> onCategoryLoad;
 
-    public TaskLoader(final Context context,
-                     final LoaderManager loaderManager) {
+    public CategoryLoader(final Context context,
+                           final LoaderManager loaderManager) {
         this.context = context;
         this.loaderManager = loaderManager;
     }
 
     @Override
     public CursorLoader onCreateLoader(final int id, final Bundle args) {
-        return new CursorLoader(context, ContentProviderValues.TASK_CATEGORY_CONTENT_URI,
+        return new CursorLoader(context, ContentProviderValues.CATEGORY_CONTENT_URI,
                 args.getStringArray(BundleKey.PROJECTION.name()),
                 args.getString(BundleKey.SELECTION.name()),
                 args.getStringArray(BundleKey.SELECTION_ARGS.name()),
@@ -40,15 +40,15 @@ public class TaskLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Category> categories = new ArrayList<>();
         if (data != null && data.moveToFirst()) {
             do {
-                Task task = new Task();
-                task.initByCursor(data);
-                tasks.add(task);
+                Category category = new Category();
+                category.initByCursor(data);
+                categories.add(category);
             } while (data.moveToNext());
         }
-        onTaskLoad.onSuccess(tasks);
+        onCategoryLoad.onSuccess(categories);
     }
 
     @Override
@@ -56,8 +56,8 @@ public class TaskLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
     }
 
-    public void loadTasks(OnEntitiesLoad<Task> onTaskLoad, Bundle args) {
-        this.onTaskLoad = onTaskLoad;
+    public void loadCategories(OnEntitiesLoad<Category> onCategoryLoad, Bundle args) {
+        this.onCategoryLoad = onCategoryLoad;
         if(loaderManager.getLoader(LOADER_ID) != null) {
             loaderManager.initLoader(LOADER_ID, args, this);
         } else {

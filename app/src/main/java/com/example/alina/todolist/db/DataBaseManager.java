@@ -15,9 +15,11 @@ public class DataBaseManager extends SQLiteOpenHelper {
 
     public static final String COLUMN_TASK_ID = "task_id";
 
-    public static final String COLUMN_TASK_UUID = "task_uuid";
-
     public static final String COLUMN_TASK_DESCRIPTION = "task_description";
+
+    public static final String COLUMN_TASK_LATITUDE = "task_latitude";
+
+    public static final String COLUMN_TASK_LONGITUDE = "task_longitude";
 
     public static final String COLUMN_TASK_CATEGORY_ID = "task_category_id";
 
@@ -57,11 +59,30 @@ public class DataBaseManager extends SQLiteOpenHelper {
 
     public static final String SUBTASK_TABLE_NAME = "subtask_table";
 
-    public static final String COLUMN_SUBTASK_ID = "subtask_id";
-
     public static final String COLUMN_SUBTASK_TASKID = "subtask_task_id";
 
 
+    public static final String QUERY_JOIN_TASK_CATEGORY_ALL = "SELECT "
+            + DataBaseManager.CATEGORY_TABLE_NAME + "." + DataBaseManager.COLUMN_CATEGORY_NAME + ", "
+            + DataBaseManager.CATEGORY_TABLE_NAME + "." + DataBaseManager.COLUMN_CATEGORY_COLOR + ", "
+            + DataBaseManager.CATEGORY_TABLE_NAME + "." + DataBaseManager.COLUMN_CATEGORY_ID + ", "
+            + DataBaseManager.TASK_TABLE_NAME + "." + DataBaseManager.COLUMN_TASK_NAME + ", "
+            + DataBaseManager.TASK_TABLE_NAME + "." + DataBaseManager.COLUMN_TASK_DESCRIPTION + ", "
+            + DataBaseManager.TASK_TABLE_NAME + "." + DataBaseManager.COLUMN_TASK_STATUS + ", "
+            + DataBaseManager.TASK_TABLE_NAME + "." + DataBaseManager.COLUMN_TASK_LATITUDE + ", "
+            + DataBaseManager.TASK_TABLE_NAME + "." + DataBaseManager.COLUMN_TASK_LONGITUDE + ", "
+            + DataBaseManager.TASK_TABLE_NAME + "." + DataBaseManager.COLUMN_TASK_ID + " FROM "
+            + DataBaseManager.TASK_TABLE_NAME + " INNER JOIN " + DataBaseManager.CATEGORY_TABLE_NAME
+            + " ON " + DataBaseManager.TASK_TABLE_NAME + "." + DataBaseManager.COLUMN_TASK_CATEGORY_ID
+            + " = " + DataBaseManager.CATEGORY_TABLE_NAME + "." + DataBaseManager.COLUMN_CATEGORY_ID;
+
+    public static final String QUERY_JOIN_TASK_CATEGORY_SINGLE = QUERY_JOIN_TASK_CATEGORY_ALL
+            + " WHERE " + DataBaseManager.TASK_TABLE_NAME + "." + DataBaseManager.COLUMN_TASK_ID
+            + " = ?";
+
+    public static final String QUERY_JOIN_TASK_CATEGORY_BY_USER = QUERY_JOIN_TASK_CATEGORY_ALL
+            + " WHERE " + DataBaseManager.TASK_TABLE_NAME + "." + DataBaseManager.COLUMN_TASK_USERID
+            + " = ?";
 
     public DataBaseManager(final Context context) {
         super(context, DATA_BASE_NAME, null, DATA_BASE_VERSION_1);
@@ -71,10 +92,11 @@ public class DataBaseManager extends SQLiteOpenHelper {
     public void onCreate(final SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE " + TASK_TABLE_NAME + "("
                 + COLUMN_TASK_ID + " integer primary key autoincrement,"
-                + COLUMN_TASK_UUID + " text,"
                 + COLUMN_TASK_DESCRIPTION + " text,"
                 + COLUMN_TASK_STATUS + " text,"
                 + COLUMN_TASK_NAME + " text,"
+                + COLUMN_TASK_LONGITUDE + " real,"
+                + COLUMN_TASK_LATITUDE + " real,"
                 + COLUMN_TASK_CATEGORY_ID + " integer,"
                 + COLUMN_EXPIRE_DATE + " integer,"
                 + COLUMN_TASK_USERID + " integer"
@@ -92,7 +114,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
                 + COLUMN_USER_PIN + " text"
                 + ");");
         sqLiteDatabase.execSQL("CREATE TABLE " + SUBTASK_TABLE_NAME + "("
-                + COLUMN_SUBTASK_ID + " integer primary key autoincrement,"
+                + COLUMN_TASK_ID + " integer primary key autoincrement,"
                 + COLUMN_TASK_DESCRIPTION + " text,"
                 + COLUMN_SUBTASK_TASKID + " integer,"
                 + COLUMN_TASK_STATUS + " text" + ");");

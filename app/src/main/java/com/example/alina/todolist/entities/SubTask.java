@@ -7,11 +7,9 @@ import android.os.Parcel;
 import com.example.alina.todolist.db.DataBaseContract;
 import com.example.alina.todolist.db.DataBaseManager;
 
-/**
- * Created by Alina on 02.11.2017.
- */
-
 public class SubTask extends TaskObject {
+
+    private int taskId;
 
     public SubTask() {
         super();
@@ -37,4 +35,13 @@ public class SubTask extends TaskObject {
             return new SubTask[0];
         }
     };
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public SubTask setTaskId(int taskId) {
+        this.taskId = taskId;
+        return this;
+    }
 }

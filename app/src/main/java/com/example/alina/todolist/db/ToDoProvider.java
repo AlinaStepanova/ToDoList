@@ -7,6 +7,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
+
+import com.example.alina.todolist.data.DataBaseDataSource;
 
 public class ToDoProvider extends ContentProvider {
 
@@ -22,65 +25,65 @@ public class ToDoProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         Cursor cursor;
-        String table;
-        if (TextUtils.isEmpty(sortOrder)) {
-            sortOrder = DataBaseManager.COLUMN_TASK_ID;
-        }
+        String table = null;
+        String rawQuery = null;
+        String defaultSortOrder;
         switch (ContentProviderValues.uriMatcher.match(uri)) {
             case ContentProviderValues.URI_ALL_TASKS:
                 table = DataBaseManager.TASK_TABLE_NAME;
+                defaultSortOrder = DataBaseManager.COLUMN_TASK_ID;
                 break;
             case ContentProviderValues.URI_SINGLE_TASKS_BY_ID:
                 selection = addUriIdSelection(DataBaseManager.COLUMN_TASK_ID, selection,
                         uri.getLastPathSegment());
                 table = DataBaseManager.TASK_TABLE_NAME;
+                defaultSortOrder = DataBaseManager.COLUMN_TASK_ID;
                 break;
             case ContentProviderValues.URI_ALL_CATEGORIES:
                 table = DataBaseManager.CATEGORY_TABLE_NAME;
+                defaultSortOrder = DataBaseManager.COLUMN_CATEGORY_ID;
                 break;
             case ContentProviderValues.URI_SINGLE_CATEGORY_BY_ID:
                 selection = addUriIdSelection(DataBaseManager.COLUMN_CATEGORY_ID, selection,
                         uri.getLastPathSegment());
                 table = DataBaseManager.CATEGORY_TABLE_NAME;
+                defaultSortOrder = DataBaseManager.COLUMN_CATEGORY_ID;
                 break;
             case ContentProviderValues.URI_ALL_SUBTASKS:
                 table = DataBaseManager.SUBTASK_TABLE_NAME;
+                defaultSortOrder = DataBaseManager.COLUMN_TASK_ID;
                 break;
             case ContentProviderValues.URI_SINGLE_SUBTASK_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_SUBTASK_ID, selection,
+                selection = addUriIdSelection(DataBaseManager.COLUMN_TASK_ID, selection,
                         uri.getLastPathSegment());
                 table = DataBaseManager.SUBTASK_TABLE_NAME;
+                defaultSortOrder = DataBaseManager.COLUMN_TASK_ID;
                 break;
             case ContentProviderValues.URI_ALL_USERS:
                 table = DataBaseManager.USER_TABLE_NAME;
+                defaultSortOrder = DataBaseManager.COLUMN_USER_ID;
                 break;
             case ContentProviderValues.URI_SINGLE_USER_BY_ID:
                 selection = addUriIdSelection(DataBaseManager.COLUMN_USER_ID, selection,
                         uri.getLastPathSegment());
                 table = DataBaseManager.USER_TABLE_NAME;
+                defaultSortOrder = DataBaseManager.COLUMN_USER_ID;
                 break;
-            case ContentProviderValues.URI_SINGLE_JOIN_TASK_SUBTASK:
-
+            case ContentProviderValues.URI_SINGLE_JOIN_TASK_CATEGORY_BY_TASKID:
+                rawQuery = DataBaseManager.QUERY_JOIN_TASK_CATEGORY_ALL;
+                defaultSortOrder = DataBaseManager.COLUMN_TASK_ID;
+                break;
+            case ContentProviderValues.URI_ALL_JOIN_TASK_CATEGORY_BY_USERID:
+                rawQuery = DataBaseManager.QUERY_JOIN_TASK_CATEGORY_BY_USER;
+                defaultSortOrder = DataBaseManager.COLUMN_TASK_ID;
+                break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented for " + uri);
         }
-//        cursor = createCursor(table, projection, selection, selectionArgs,
-//                sortOrder);
+        sortOrder = setOrder(sortOrder, defaultSortOrder);
+        cursor = createCursor(table, projection, selection, selectionArgs,
+                sortOrder, rawQuery);
         notifyChange(uri);
-        String s = "SELECT "
-                + DataBaseManager.SUBTASK_TABLE_NAME + "."
-                + DataBaseManager.COLUMN_TASK_DESCRIPTION + " , "
-                + DataBaseManager.SUBTASK_TABLE_NAME + "."
-                + DataBaseManager.COLUMN_TASK_STATUS + " FROM "
-                + DataBaseManager.TASK_TABLE_NAME + " INNER JOIN "
-                + DataBaseManager.SUBTASK_TABLE_NAME + " ON "
-                + DataBaseManager.TASK_TABLE_NAME + "."
-                + DataBaseManager.COLUMN_TASK_ID + " = "
-                + DataBaseManager.SUBTASK_TABLE_NAME + "."
-                + DataBaseManager.COLUMN_SUBTASK_TASKID + " WHERE "
-                + DataBaseManager.TASK_TABLE_NAME + "."
-                + DataBaseManager.COLUMN_TASK_ID + " = ?";
-        cursor = dataBaseManager.getWritableDatabase().rawQuery(s, selectionArgs);
         return cursor;
     }
 
@@ -108,7 +111,7 @@ public class ToDoProvider extends ContentProvider {
                 table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_SUBTASK_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_SUBTASK_ID, selection,
+                selection = addUriIdSelection(DataBaseManager.COLUMN_TASK_ID, selection,
                         uri.getLastPathSegment());
                 table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
@@ -148,8 +151,7 @@ public class ToDoProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Not yet implemented for " + uri);
         }
-        insertedUri = insertRow(table, values,
-                ContentProviderValues.USER_CONTENT_URI);
+        insertedUri = insertRow(table, values, uri);
         notifyChange(insertedUri);
         return insertedUri;
     }
@@ -179,7 +181,7 @@ public class ToDoProvider extends ContentProvider {
                 table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
             case ContentProviderValues.URI_SINGLE_SUBTASK_BY_ID:
-                selection = addUriIdSelection(DataBaseManager.COLUMN_SUBTASK_ID, selection,
+                selection = addUriIdSelection(DataBaseManager.COLUMN_TASK_ID, selection,
                         uri.getLastPathSegment());
                 table = DataBaseManager.SUBTASK_TABLE_NAME;
                 break;
@@ -191,11 +193,14 @@ public class ToDoProvider extends ContentProvider {
                         uri.getLastPathSegment());
                 table = DataBaseManager.USER_TABLE_NAME;
                 break;
+            case ContentProviderValues.URI_SINGLE_JOIN_TASK_CATEGORY_BY_TASKID:
+                table = DataBaseManager.TASK_TABLE_NAME;
+                break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented");
         }
         notifyChange(uri);
-        return updateTable(DataBaseManager.USER_TABLE_NAME, values, selection,
+        return updateTable(table, values, selection,
                 selectionArgs);
     }
 
@@ -227,6 +232,11 @@ public class ToDoProvider extends ContentProvider {
             case ContentProviderValues.URI_SINGLE_USER_BY_ID:
                 type = ContentProviderValues.TYPE_CONTENT_USER_SINGLE;
                 break;
+            case ContentProviderValues.URI_SINGLE_JOIN_TASK_CATEGORY_BY_TASKID:
+                type = ContentProviderValues.TYPE_CONTENT_TASK_CATEGORY_SINGLE;
+                break;
+            case ContentProviderValues.URI_ALL_JOIN_TASK_CATEGORY_BY_USERID:
+                type = ContentProviderValues.TYPE_CONTENT_TASK_CATEGORY_ALL_BY_USERID;
         }
         return type;
     }
@@ -248,10 +258,16 @@ public class ToDoProvider extends ContentProvider {
     }
 
     private Cursor createCursor(String table, String[] projection, String selection,
-                                String[] selectionArgs, String sortOrder){
-        return dataBaseManager.getWritableDatabase()
-                .query(table, projection, selection, selectionArgs,
-                        null, null, sortOrder);
+                                String[] selectionArgs, String sortOrder, String rawQuery){
+        Cursor cursor;
+        if(table != null) {
+            cursor = dataBaseManager.getWritableDatabase()
+                    .query(table, projection, selection, selectionArgs,
+                            null, null, sortOrder);
+        } else {
+            cursor = dataBaseManager.getWritableDatabase().rawQuery(rawQuery, selectionArgs);
+        }
+        return cursor;
     }
 
     private int deleteRows(String table, String selection, String[] selectionArgs){
@@ -267,5 +283,12 @@ public class ToDoProvider extends ContentProvider {
     private int updateTable(String table, ContentValues values, String selection, String[] selectionArgs){
         return dataBaseManager.getWritableDatabase()
                 .update(table, values, selection, selectionArgs);
+    }
+
+    private String setOrder(String sortOrder, String defaultSortOrder){
+        if (TextUtils.isEmpty(sortOrder)) {
+            sortOrder = defaultSortOrder;
+        }
+        return sortOrder;
     }
 }
