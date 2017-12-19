@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ToDoList-1.iml" filepath="$PROJECT_DIR$/ToDoList-1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ToDoList.iml" filepath="$PROJECT_DIR$/ToDoList.iml" />
+      <module fileurl="file://C:\Users\Alina\AndroidStudioProjects\cursach\ToDoList\ToDoList_team.iml" filepath="C:\Users\Alina\AndroidStudioProjects\cursach\ToDoList\ToDoList_team.iml" />
     </modules>
   </component>
 </project>
