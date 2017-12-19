@@ -1,11 +1,16 @@
 package com.example.alina.todolist;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +23,7 @@ import com.example.alina.todolist.adapters.SubTaskAdapter;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
+import com.example.alina.todolist.enums.NotificationChannels;
 
 public class TaskActivity extends BaseActivity {
 
@@ -31,6 +37,7 @@ public class TaskActivity extends BaseActivity {
     private RecyclerView subTaskRecycler;
     private SubTaskAdapter subTaskAdapter;
     private Button showOnMapButton;
+    private Button sendNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,7 @@ public class TaskActivity extends BaseActivity {
         categoryName = (TextView) findViewById(R.id.categoryName);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         showOnMapButton = findViewById(R.id.showOnMapButton);
+        sendNotification = findViewById(R.id.sendNotification);
         subTaskRecycler = findViewById(R.id.subTaskRecycler);
         subTaskRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         subTaskAdapter = new SubTaskAdapter(this);
@@ -71,10 +79,16 @@ public class TaskActivity extends BaseActivity {
             public void onClick(View v) {
                 if (task.getLocation() != null) {
                     Intent mapIntent = new Intent(TaskActivity.this, MapsActivity.class);
-                    mapIntent.putExtra(BundleKey.TASK_LOCATION.name(), task.getLocation());
-                    mapIntent.putExtra(BundleKey.TASK_NAME.name(), task.getName());
+                    mapIntent.putExtra(BundleKey.TASK.name(), task);
                     startActivity(mapIntent);
                 }
+            }
+        });
+
+        sendNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNotificationClick();
             }
         });
     }
@@ -106,6 +120,24 @@ public class TaskActivity extends BaseActivity {
         } else {
             finish();
         }
+    }
+
+    private void sendNotificationClick(){
+        Notification notification = new NotificationCompat.Builder(this, NotificationChannels.TASK.name())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(task.getName())
+                .setContentText(task.getDescription())
+                .addAction(getAction(getString(R.string.open_task), R.drawable.ic_open_task, TaskActivity.class))
+                .addAction(getAction(getString(R.string.open_map), R.drawable.ic_map, MapsActivity.class))
+                .build();
+        NotificationManagerCompat.from(this).notify(0,notification);
+    }
+
+    private NotificationCompat.Action getAction(String actionName, @DrawableRes int icon, Class openActivity){
+        Intent intent = new Intent(this, openActivity);
+        intent.putExtra(BundleKey.TASK.name(), task);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, icon, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return new NotificationCompat.Action(icon, actionName, pendingIntent);
     }
 
     @Override

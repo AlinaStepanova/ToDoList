@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.BundleKey;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,10 +24,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        if (getIntent().getExtras() != null){
-            taskName = getIntent().getStringExtra(BundleKey.TASK_NAME.name());
-            taskLocation = getIntent().getParcelableExtra(BundleKey.TASK_LOCATION.name());
-        }
+        if (getIntent().hasExtra(BundleKey.TASK.name())){
+            Task task = getIntent().getParcelableExtra(BundleKey.TASK.name());
+            taskName = task.getName();
+            taskLocation = task.getLocation();
+        } else finish();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
