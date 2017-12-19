@@ -38,6 +38,7 @@ public class TaskActivity extends BaseActivity {
     private SubTaskAdapter subTaskAdapter;
     private Button showOnMapButton;
     private Button sendNotification;
+    private Button removeNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class TaskActivity extends BaseActivity {
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         showOnMapButton = findViewById(R.id.showOnMapButton);
         sendNotification = findViewById(R.id.sendNotification);
+        removeNotification = findViewById(R.id.removeNotification);
         subTaskRecycler = findViewById(R.id.subTaskRecycler);
         subTaskRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         subTaskAdapter = new SubTaskAdapter(this);
@@ -89,6 +91,13 @@ public class TaskActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 sendNotificationClick();
+            }
+        });
+
+        removeNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeNotificationClick();
             }
         });
     }
@@ -130,7 +139,13 @@ public class TaskActivity extends BaseActivity {
                 .addAction(getAction(getString(R.string.open_task), R.drawable.ic_open_task, TaskActivity.class))
                 .addAction(getAction(getString(R.string.open_map), R.drawable.ic_map, MapsActivity.class))
                 .build();
+        // TODO: set task id instead hardcode
         NotificationManagerCompat.from(this).notify(0,notification);
+    }
+
+    private void removeNotificationClick(){
+        // TODO: close by task id
+        NotificationManagerCompat.from(this).cancel(0);
     }
 
     private NotificationCompat.Action getAction(String actionName, @DrawableRes int icon, Class openActivity){
