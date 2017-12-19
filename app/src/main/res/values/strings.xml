@@ -129,4 +129,5 @@
     <string name="send_notification">Send notification</string>
     <string name="open_task">Open task</string>
     <string name="open_map">Open map</string>
+    <string name="remove_notification">Remove notification</string>
 </resources>

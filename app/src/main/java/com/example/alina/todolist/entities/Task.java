@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Task extends TaskObject {
 
+    private int id;
+
     private String name;
 
     private Date expireDate;
@@ -111,6 +113,7 @@ public class Task extends TaskObject {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+        dest.writeInt(this.id);
         dest.writeString(this.name);
         dest.writeLong(this.expireDate != null ? this.expireDate.getTime() : -1);
         dest.writeTypedList(this.subTasksList);
@@ -119,6 +122,7 @@ public class Task extends TaskObject {
 
     protected Task(Parcel in) {
         super(in);
+        this.id = in.readInt();
         this.name = in.readString();
         long tmpExpireDate = in.readLong();
         this.expireDate = tmpExpireDate == -1 ? null : new Date(tmpExpireDate);
@@ -141,6 +145,7 @@ public class Task extends TaskObject {
     @Override
     public String toString() {
         return "Task{" +
+                "id=" + id + '\'' +
                 "name='" + name + '\'' +
                 ", expireDate=" + expireDate +
                 ", subTasksList=" + subTasksList + " " + getStatus().toString() + " " +
