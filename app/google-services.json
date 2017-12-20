@@ -15,11 +15,71 @@
       },
       "oauth_client": [
         {
+          "client_id": "1055894068440-hunedt96jposv5fpj3p7kmflvqmhnvie.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alina.todolist",
+            "certificate_hash": "d072d7701623ad8a21aff79a85a2633c0e162602"
+          }
+        },
+        {
+          "client_id": "1055894068440-feim3tu6u4onr2e69ddl0e9dt5019bq7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alina.todolist",
+            "certificate_hash": "fdcb48eac7721fa6dc54d0429c396f36ce33c312"
+          }
+        },
+        {
           "client_id": "1055894068440-praip25f94b4l1dj0d03hotdoqr2mdu3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.alina.todolist",
             "certificate_hash": "4dc51b98c417ef1c6708e83f20cb82ac6bdb491c"
+          }
+        },
+        {
+          "client_id": "1055894068440-m7cm0ktff1ioavnmlt535b25ajb42oiu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVW0vSHAPnjT9_l2iReDol8dJuK91I8sg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055894068440-m7cm0ktff1ioavnmlt535b25ajb42oiu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055894068440:android:33948a140ac24fb4",
+        "android_client_info": {
+          "package_name": "com.example.volodymyrstelmashchuk.firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055894068440-rmukd4mlgmgepl3phnbfip1bo12f0lot.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.volodymyrstelmashchuk.firebase",
+            "certificate_hash": "44871300e1b5e42c7737946a642c94ee8121a001"
           }
         },
         {

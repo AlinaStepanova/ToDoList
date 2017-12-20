@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -30,16 +31,21 @@ import android.widget.Toast;
 
 import com.example.alina.todolist.adapters.ItemTouchHelperCallback;
 import com.example.alina.todolist.adapters.SubTaskAdapter;
+import com.example.alina.todolist.data.firebase.FirebaseFileHelper;
 import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.entities.TaskObject;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
+import com.example.alina.todolist.enums.TaskImageStatus;
 import com.example.alina.todolist.enums.TaskState;
 import com.example.alina.todolist.fragments.AddSubTaskDialogFragment;
 import com.example.alina.todolist.fragments.DatePickerFragment;
 import com.example.alina.todolist.validators.Constants;
 import com.example.alina.todolist.validators.Validator;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -115,6 +121,10 @@ public class CreateTaskActivity extends BaseActivity implements
             latitudeEditText.setText(String.valueOf(task.getLocation().getLatitude()));
             longitudeEditText.setText(String.valueOf(task.getLocation().getLongitude()));
         }
+        showTaskImage();
+    }
+
+    private void showTaskImage() {
         if (!TextUtils.isEmpty(task.getImageUrl())){
             Picasso.with(this)
                     .load("file://" + task.getImageUrl())
@@ -181,6 +191,8 @@ public class CreateTaskActivity extends BaseActivity implements
             if (resultCode == Activity.RESULT_OK){
                 setTaskImage(currentFilePath);
                 task.setImageUrl(currentFilePath);
+                task.setImageDownloadState(TaskImageStatus.IN_PROGRES);
+                loadFileIntoFirebase();
             }
         } else super.onActivityResult(requestCode, resultCode, data);
     }
@@ -190,6 +202,24 @@ public class CreateTaskActivity extends BaseActivity implements
                 .load("file://" + imageUri)
                 .fit().centerInside()
                 .into(taskImage);
+    }
+
+
+    private void loadFileIntoFirebase(){
+        FirebaseFileHelper helper = new FirebaseFileHelper(0);
+        helper.uploadFile(currentFilePath, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // TODO: save file url
+                // and change status
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+
+            }
+        });
     }
 
     @Override
