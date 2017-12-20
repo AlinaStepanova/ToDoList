@@ -1,14 +1,19 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -21,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.adapters.ItemTouchHelperCallback;
 import com.example.alina.todolist.adapters.SubTaskAdapter;
 import com.example.alina.todolist.entities.Category;
@@ -164,9 +170,43 @@ public class CreateTaskActivity extends BaseActivity implements
             case R.id.item_done_task:
                 setTaskDone();
                 return true;
+            case R.id.item_notification_task:
+                sendNotification();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void sendNotification(){;
+        Notification notification = new NotificationCompat.Builder(this, "chanelId")
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .addAction(makeAction(getString(R.string.open_notification),
+                        R.drawable.ic_open_in_new_black_24dp))
+                .addAction(makeAction(getString(R.string.map_notification),
+                        R.drawable.ic_map_black_24dp))
+                .setContentTitle(task.getName())
+                .setContentText(task.getDescription())
+                .build();
+
+        NotificationManagerCompat.from(this).notify(0, notification);
+    }
+
+    private NotificationCompat.Action makeAction(String actionName, @DrawableRes int icon){
+        Intent intent = null;
+        switch (actionName){
+            case "Open":
+                intent = new Intent(this, MainActivity.class);
+                break;
+            case "Map":
+                intent = new Intent(this, MapsActivity.class);
+                break;
+            default:
+                break;
+        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, icon,
+                intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return new NotificationCompat.Action(icon, actionName, pendingIntent);
     }
 
     private void setTaskDone() {

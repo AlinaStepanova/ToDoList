@@ -19,6 +19,9 @@
     <string name="go_to_category">Category</string>
     <string name="map_activity">Map</string>
     <string name="sign_out">Sign Out</string>
+    <string name="notification">N</string>
+    <string name="open_notification">Open</string>
+    <string name="map_notification">Map</string>
 
     <string name="undo">UNDO</string>
     <string name="sub_task_deleted">SubTask deleted</string>

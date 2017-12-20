@@ -18,7 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,18 +26,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateTaskActivity"
+            android:name=".activities.CreateTaskActivity"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
-        <activity android:name=".CategoryActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".activities.CategoryActivity" />
+        <activity android:name=".activities.MainActivity" />
         <activity
-            android:name=".TaskActivity"
+            android:name=".activities.TaskActivity"
             android:label="@string/title_activity_task"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activities.MainActivity" />
         </activity>
 
         <provider
@@ -63,9 +63,9 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".LoginActivityFirebase"></activity>
+        <activity android:name=".activities.LoginActivityFirebase"></activity>
     </application>
 
 </manifest>

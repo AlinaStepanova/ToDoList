@@ -5,10 +5,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.alina.todolist.CategoryActivity;
-import com.example.alina.todolist.LoginActivity;
-import com.example.alina.todolist.MainActivity;
-import com.example.alina.todolist.MapsActivity;
+import com.example.alina.todolist.activities.CategoryActivity;
+import com.example.alina.todolist.activities.LoginActivity;
+import com.example.alina.todolist.activities.MainActivity;
+import com.example.alina.todolist.activities.MapsActivity;
 import com.example.alina.todolist.listeners.OnDataChangedListener;
 
 /**

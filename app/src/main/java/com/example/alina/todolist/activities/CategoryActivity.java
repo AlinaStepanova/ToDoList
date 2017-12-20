@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +12,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.adapters.CategoryAdapter;
-import com.example.alina.todolist.data.DataBaseDataSource;
 import com.example.alina.todolist.data.DataSourceFactory;
-import com.example.alina.todolist.data.FirebaseDataSource;
 import com.example.alina.todolist.data.IDataSource;
-import com.example.alina.todolist.data.SharedPreferencesDataSource;
 import com.example.alina.todolist.entities.Category;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.AddCategoryFragment;

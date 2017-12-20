@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -11,8 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.alina.todolist.data.DataBaseDataSource;
-import com.example.alina.todolist.data.DataBaseSourceBuilder;
+import com.example.alina.todolist.LocationService;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.validators.Constants;

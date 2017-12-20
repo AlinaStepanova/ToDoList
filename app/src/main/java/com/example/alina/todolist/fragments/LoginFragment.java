@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.alina.todolist.LoginActivity;
+import com.example.alina.todolist.activities.LoginActivity;
 import com.example.alina.todolist.R;
 import com.example.alina.todolist.entities.User;
 
