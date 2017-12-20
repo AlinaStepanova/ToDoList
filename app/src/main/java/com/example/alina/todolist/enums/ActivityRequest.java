@@ -12,4 +12,5 @@ public enum ActivityRequest {
     ON_CHECK_PIN_PRESSED_BACK,
     EDIT_TASK,
     CHECK_PASSWORD,
+    REQUEST_CAMERA
 }

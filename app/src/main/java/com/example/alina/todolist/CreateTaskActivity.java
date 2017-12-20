@@ -3,20 +3,27 @@ package com.example.alina.todolist;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,12 +33,17 @@ import com.example.alina.todolist.adapters.SubTaskAdapter;
 import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.entities.TaskObject;
+import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.enums.TaskState;
 import com.example.alina.todolist.fragments.AddSubTaskDialogFragment;
 import com.example.alina.todolist.fragments.DatePickerFragment;
+import com.example.alina.todolist.validators.Constants;
 import com.example.alina.todolist.validators.Validator;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 public class CreateTaskActivity extends BaseActivity implements
@@ -39,7 +51,11 @@ public class CreateTaskActivity extends BaseActivity implements
         AddSubTaskDialogFragment.CreateSubTaskDialogListener,
         SubTaskAdapter.ItemSwipeCallback{
 
+    private static final String FILE_PREFIX = "JPEG_";
+    private static final String FILE_EXT = ".jpg";
+
     private Task task;
+    private String currentFilePath;
     private TextInputLayout nameWrapper;
     private TextInputLayout descriptionWrapper;
     private EditText nameEditText;
@@ -50,6 +66,8 @@ public class CreateTaskActivity extends BaseActivity implements
     private RecyclerView subTaskRecycler;
     private SubTaskAdapter subTaskAdapter;
     private LinearLayout taskDateLayout;
+    private Button openCameraButton;
+    private ImageView taskImage;
     private Validator stringValidator = new Validator.StringValidatorBuilder()
             .setNotEmpty()
             .setMinLength(3)
@@ -72,6 +90,7 @@ public class CreateTaskActivity extends BaseActivity implements
         initDatePickerClick();
         initSubTaskRecycler();
         initCreateTaskButton();
+        initOpenCameraButton();
     }
 
     private void initUI() {
@@ -84,6 +103,8 @@ public class CreateTaskActivity extends BaseActivity implements
         taskDateLayout = (LinearLayout) findViewById(R.id.taskDateLayout);
         latitudeEditText = findViewById(R.id.latitudeEditText);
         longitudeEditText = findViewById(R.id.longitudeEditText);
+        openCameraButton = findViewById(R.id.openCameraButton);
+        taskImage = findViewById(R.id.taskImage);
     }
 
     private void setData() {
@@ -93,6 +114,13 @@ public class CreateTaskActivity extends BaseActivity implements
         if (task.getLocation() != null){
             latitudeEditText.setText(String.valueOf(task.getLocation().getLatitude()));
             longitudeEditText.setText(String.valueOf(task.getLocation().getLongitude()));
+        }
+        if (!TextUtils.isEmpty(task.getImageUrl())){
+            Picasso.with(this)
+                    .load("file://" + task.getImageUrl())
+                    .fit()
+                    .centerInside()
+                    .into(taskImage);
         }
     }
 
@@ -114,6 +142,54 @@ public class CreateTaskActivity extends BaseActivity implements
                 showDatePickerDialog();
             }
         });
+    }
+
+    private void initOpenCameraButton(){
+        openCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    startCameraIntent();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void startCameraIntent() throws IOException {
+        File photoFile = createImageFile();
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri photoUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, photoFile);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, ActivityRequest.REQUEST_CAMERA.ordinal());
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String imageFileName = FILE_PREFIX + Constants.IMAGE_FORMAT.format(new Date()) + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, FILE_EXT, storageDir);
+        currentFilePath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ActivityRequest.REQUEST_CAMERA.ordinal()){
+            if (resultCode == Activity.RESULT_OK){
+                setTaskImage(currentFilePath);
+                task.setImageUrl(currentFilePath);
+            }
+        } else super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void setTaskImage(String imageUri){
+        Picasso.with(this)
+                .load("file://" + imageUri)
+                .fit().centerInside()
+                .into(taskImage);
     }
 
     @Override

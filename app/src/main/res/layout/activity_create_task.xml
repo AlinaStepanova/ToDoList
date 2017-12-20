@@ -107,11 +107,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/subTaskRecycler"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/openCameraButton"
+                android:text="@string/open_camera"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:id="@+id/taskImage"
+                android:layout_margin="@dimen/space16"
+                android:layout_width="match_parent"
+                android:layout_height="150dp" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/subTaskRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton

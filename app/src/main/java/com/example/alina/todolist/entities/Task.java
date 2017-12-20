@@ -4,6 +4,7 @@ package com.example.alina.todolist.entities;
 import android.location.Location;
 import android.os.Parcel;
 
+import com.example.alina.todolist.enums.TaskImageStatus;
 import com.example.alina.todolist.validators.Constants;
 
 import java.util.ArrayList;
@@ -28,6 +29,10 @@ public class Task extends TaskObject {
     private List<SubTask> subTasksList;
 
     private Location location;
+
+    private String imageUrl;
+
+    private int imageDownloadState;
 
     public Task() {
         expireDate = new Date();
@@ -105,6 +110,22 @@ public class Task extends TaskObject {
         this.location = location;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setImageDownloadState(TaskImageStatus state){
+        imageDownloadState = state.ordinal();
+    }
+
+    public int getImageDownloadState(){
+        return imageDownloadState;
+    }
+
     @Override
     public boolean isDone() {
         return super.isDone();
@@ -118,6 +139,8 @@ public class Task extends TaskObject {
         dest.writeLong(this.expireDate != null ? this.expireDate.getTime() : -1);
         dest.writeTypedList(this.subTasksList);
         location.writeToParcel(dest, flags);
+        dest.writeString(this.imageUrl);
+        dest.writeInt(imageDownloadState);
     }
 
     protected Task(Parcel in) {
@@ -128,6 +151,8 @@ public class Task extends TaskObject {
         this.expireDate = tmpExpireDate == -1 ? null : new Date(tmpExpireDate);
         this.subTasksList = in.createTypedArrayList(SubTask.CREATOR);
         this.location = Location.CREATOR.createFromParcel(in);
+        this.imageUrl = in.readString();
+        this.imageDownloadState = in.readInt();
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
