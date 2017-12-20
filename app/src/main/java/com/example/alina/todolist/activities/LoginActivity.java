@@ -1,40 +1,27 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.example.alina.todolist.data.DataBaseDataSource;
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.data.DataSourceFactory;
-import com.example.alina.todolist.data.FileDataSource;
 import com.example.alina.todolist.data.IDataSource;
-import com.example.alina.todolist.db.ContentProviderValues;
-import com.example.alina.todolist.db.DataBaseManager;
-import com.example.alina.todolist.entities.Category;
-import com.example.alina.todolist.entities.SubTask;
-import com.example.alina.todolist.entities.Task;
-import com.example.alina.todolist.entities.TaskObject;
 import com.example.alina.todolist.entities.User;
 import com.example.alina.todolist.fragments.LoginFragment;
 import com.example.alina.todolist.fragments.UserEmailFragment;
 import com.example.alina.todolist.fragments.UserNameFragment;
 import com.example.alina.todolist.fragments.UserPinFragment;
 import com.example.alina.todolist.fragments.UserWelcomeFragment;
-import com.example.alina.todolist.listeners.OnDataChangedListener;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
 
 import static com.example.alina.todolist.enums.BundleKey.NEED_CHECK_PASSWORD;
 

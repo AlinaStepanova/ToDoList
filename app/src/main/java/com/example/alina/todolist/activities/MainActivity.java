@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,18 +6,15 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.adapters.TaskFragmentPagerAdapter;
-import com.example.alina.todolist.data.DataBaseDataSource;
 import com.example.alina.todolist.data.DataSourceFactory;
-import com.example.alina.todolist.data.FirebaseDataSource;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.entities.Task;
-import com.example.alina.todolist.entities.User;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.TaskListFragment;

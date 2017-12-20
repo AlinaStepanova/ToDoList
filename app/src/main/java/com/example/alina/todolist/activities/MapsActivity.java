@@ -1,7 +1,8 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.os.Bundle;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.data.DataSourceFactory;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.entities.Task;
