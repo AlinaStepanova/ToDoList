@@ -61,6 +61,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_path"/>
         </provider>
+
+        <provider
+            android:authorities="com.example.alina.todolist.database"
+            android:name=".data.db.DatabaseProvider"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>
