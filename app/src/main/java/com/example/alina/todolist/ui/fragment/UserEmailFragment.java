@@ -1,4 +1,4 @@
-package com.example.alina.todolist.fragments;
+package com.example.alina.todolist.ui.fragment;
 
 
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.alina.todolist.LoginActivity;
+import com.example.alina.todolist.ui.activity.LoginActivity;
 import com.example.alina.todolist.R;
 import com.example.alina.todolist.entities.User;
 

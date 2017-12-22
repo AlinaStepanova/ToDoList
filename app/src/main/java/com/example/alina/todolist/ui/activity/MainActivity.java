@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,13 +9,14 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.adapters.TaskFragmentPagerAdapter;
 import com.example.alina.todolist.data.FileDataSource;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
-import com.example.alina.todolist.fragments.TaskListFragment;
+import com.example.alina.todolist.ui.fragment.TaskListFragment;
 import com.example.alina.todolist.listeners.OnDataChangedListener;
 
 public class MainActivity extends BaseActivity implements TaskListFragment.TaskFragmentCallback, OnDataChangedListener{

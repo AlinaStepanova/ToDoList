@@ -1,9 +1,10 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.ui.activity;
 
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.BundleKey;
 import com.google.android.gms.maps.CameraUpdateFactory;

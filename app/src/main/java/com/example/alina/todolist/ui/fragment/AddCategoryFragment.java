@@ -1,4 +1,4 @@
-package com.example.alina.todolist.fragments;
+package com.example.alina.todolist.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.alina.todolist.CategoryActivity;
+import com.example.alina.todolist.ui.activity.CategoryActivity;
 import com.example.alina.todolist.R;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.validators.Validator;

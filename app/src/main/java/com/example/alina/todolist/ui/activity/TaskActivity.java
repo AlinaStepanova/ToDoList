@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.ui.activity;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.adapters.SubTaskAdapter;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;

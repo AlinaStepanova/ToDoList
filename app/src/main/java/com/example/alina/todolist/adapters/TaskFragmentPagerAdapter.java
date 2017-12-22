@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.TaskState;
-import com.example.alina.todolist.fragments.TaskListFragment;
+import com.example.alina.todolist.ui.fragment.TaskListFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;

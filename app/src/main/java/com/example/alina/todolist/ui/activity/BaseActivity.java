@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;

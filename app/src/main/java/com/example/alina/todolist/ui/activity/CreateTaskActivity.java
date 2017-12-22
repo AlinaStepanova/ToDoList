@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,6 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.alina.todolist.BuildConfig;
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.adapters.ItemTouchHelperCallback;
 import com.example.alina.todolist.adapters.SubTaskAdapter;
 import com.example.alina.todolist.data.firebase.FirebaseFileHelper;
@@ -39,8 +41,8 @@ import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.enums.TaskImageStatus;
 import com.example.alina.todolist.enums.TaskState;
-import com.example.alina.todolist.fragments.AddSubTaskDialogFragment;
-import com.example.alina.todolist.fragments.DatePickerFragment;
+import com.example.alina.todolist.ui.fragment.AddSubTaskDialogFragment;
+import com.example.alina.todolist.ui.fragment.DatePickerFragment;
 import com.example.alina.todolist.validators.Constants;
 import com.example.alina.todolist.validators.Validator;
 import com.google.android.gms.tasks.OnFailureListener;

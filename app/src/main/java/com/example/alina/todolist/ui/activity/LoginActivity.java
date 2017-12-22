@@ -1,19 +1,19 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.data.FileDataSource;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.entities.User;
-import com.example.alina.todolist.fragments.LoginFragment;
-import com.example.alina.todolist.fragments.UserEmailFragment;
-import com.example.alina.todolist.fragments.UserNameFragment;
-import com.example.alina.todolist.fragments.UserPinFragment;
-import com.example.alina.todolist.fragments.UserWelcomeFragment;
+import com.example.alina.todolist.ui.fragment.LoginFragment;
+import com.example.alina.todolist.ui.fragment.UserEmailFragment;
+import com.example.alina.todolist.ui.fragment.UserNameFragment;
+import com.example.alina.todolist.ui.fragment.UserPinFragment;
+import com.example.alina.todolist.ui.fragment.UserWelcomeFragment;
 import com.example.alina.todolist.listeners.OnDataChangedListener;
 
 import java.util.ArrayList;

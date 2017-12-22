@@ -1,4 +1,4 @@
-package com.example.alina.todolist.fragments;
+package com.example.alina.todolist.ui.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
