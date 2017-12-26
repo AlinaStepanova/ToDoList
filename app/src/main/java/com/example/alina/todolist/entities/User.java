@@ -1,12 +1,17 @@
 package com.example.alina.todolist.entities;
 
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.alina.todolist.data.db.DatabaseContract;
+import com.example.alina.todolist.data.db.DatabaseSchema;
+
 import java.util.ArrayList;
 
-public class User implements Parcelable {
+public class User implements Parcelable, DatabaseContract {
     private int id;
     private String name;
     private String email;
@@ -15,9 +20,6 @@ public class User implements Parcelable {
     private ArrayList<Category> categories;
 
     public User() {
-        this.name = "";
-        this.email = "";
-        this.pin = "";
         this.tasks = new ArrayList<>();
         this.categories = new ArrayList<>();
     }
@@ -39,6 +41,7 @@ public class User implements Parcelable {
     }
 
     public User(Parcel parcel) {
+        this.id = parcel.readInt();
         String[] data = new String[3];
         parcel.readStringArray(data);
         this.name = data[0];
@@ -48,6 +51,9 @@ public class User implements Parcelable {
         parcel.readTypedList(this.categories, Category.CREATOR);
     }
 
+    public int getId() {
+        return id;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -108,8 +114,26 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(this.id);
         parcel.writeStringArray(new String[]{this.name,this.email,this.pin});
         parcel.writeTypedList(this.tasks);
         parcel.writeTypedList(this.categories);
+    }
+
+    @Override
+    public void initByCursor(Cursor cursor) {
+        id = cursor.getInt(cursor.getColumnIndex(DatabaseSchema.User.ID));
+        name = cursor.getString(cursor.getColumnIndex(DatabaseSchema.User.NAME));
+        email = cursor.getString(cursor.getColumnIndex(DatabaseSchema.User.EMAIL));
+        pin = cursor.getString(cursor.getColumnIndex(DatabaseSchema.User.PIN));
+    }
+
+    @Override
+    public ContentValues toContentValues() {
+        ContentValues cv = new ContentValues();
+        cv.put(DatabaseSchema.User.NAME, name);
+        cv.put(DatabaseSchema.User.EMAIL, email);
+        cv.put(DatabaseSchema.User.PIN, pin);
+        return cv;
     }
 }
