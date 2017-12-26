@@ -11,11 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.alina.todolist.ui.activity.LoginActivity;
 import com.example.alina.todolist.R;
-import com.example.alina.todolist.entities.User;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,10 +79,10 @@ public class UserEmailFragment extends Fragment {
 
     private boolean validateEmail(String email){
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
-        return matcher.find() && !existsSameUserMail(email);
+        return matcher.find();
     }
 
-    private boolean existsSameUserMail(String email){
+/*    private boolean existsSameUserMail(String email){
         LoginActivity activity = (LoginActivity)getActivity();
         ArrayList<User> users = activity.getUsersFromData();
         boolean result = false;
@@ -96,5 +93,5 @@ public class UserEmailFragment extends Fragment {
             }
         }
         return result;
-    }
+    }*/
 }

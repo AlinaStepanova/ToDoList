@@ -3,20 +3,16 @@ package com.example.alina.todolist.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.example.alina.todolist.R;
-import com.example.alina.todolist.data.FileDataSource;
-import com.example.alina.todolist.data.IDataSource;
+import com.example.alina.todolist.data.repository.DatabaseSource;
 import com.example.alina.todolist.entities.User;
+import com.example.alina.todolist.listeners.OnDataChangedListener;
 import com.example.alina.todolist.ui.fragment.LoginFragment;
 import com.example.alina.todolist.ui.fragment.UserEmailFragment;
 import com.example.alina.todolist.ui.fragment.UserNameFragment;
 import com.example.alina.todolist.ui.fragment.UserPinFragment;
 import com.example.alina.todolist.ui.fragment.UserWelcomeFragment;
-import com.example.alina.todolist.listeners.OnDataChangedListener;
-
-import java.util.ArrayList;
 
 import static com.example.alina.todolist.enums.BundleKey.NEED_CHECK_PASSWORD;
 
@@ -28,8 +24,6 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
     public static boolean NEED_REFRESH_PIN = true;
 
     private User currentUser;
-    private IDataSource dataSource;
-
     private Intent intent;
 
 
@@ -56,8 +50,6 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
                     .commit();
             NEED_REFRESH_PIN = false;
         }
-
-        dataSource = new FileDataSource(this, this);
     }
 
     @Override
@@ -81,10 +73,6 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
         return currentUser;
     }
 
-    public ArrayList<User> getUsersFromData() {
-        return dataSource.getUserList();
-    }
-
     @Override
     public void needRegistration(boolean needRegistration, int userCount) {
         if (needRegistration) {
@@ -96,8 +84,7 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
                     .addToBackStack("UserName")
                     .commit();
         } else {
-            dataSource.setCurrentUser(getUsersFromData().get(userCount));
-
+//            dataSource.setCurrentUser(getUsersFromData().get(userCount));
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
@@ -127,13 +114,16 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
     @Override
     public void getPin(String pin) {
         if (intent.getBooleanExtra(NEED_CHECK_PASSWORD.name(), false)) {
-            if (pin.equals(dataSource.getCurrentUser().getPin())) {
+            setResult(Activity.RESULT_OK);
+            NEED_REFRESH_PIN = true;
+            finish();
+            /*if (pin.equals(dataSource.getCurrentUser().getPin())) {
                 setResult(Activity.RESULT_OK);
                 NEED_REFRESH_PIN = true;
                 finish();
             } else {
                 Toast.makeText(this, "Wrong pin", Toast.LENGTH_SHORT).show();
-            }
+            }*/
         } else {
             currentUser.setPin(pin);
             getSupportFragmentManager().beginTransaction()
@@ -146,8 +136,8 @@ public class LoginActivity extends BaseActivity implements LoginFragment.NeedReg
 
     @Override
     public void runMainActivity() {
-        dataSource.addUser(currentUser);
-        dataSource.setCurrentUser(currentUser);
+        DatabaseSource helper = new DatabaseSource(this);
+        helper.createNewUser(currentUser);
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }

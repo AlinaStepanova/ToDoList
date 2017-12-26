@@ -14,8 +14,10 @@ import com.example.alina.todolist.validators.Constants;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -208,10 +210,25 @@ public class Task extends TaskObject implements DatabaseContract {
         cv.put(DatabaseSchema.Task.EXP_DATE, expireDate.getTime());
         cv.put(DatabaseSchema.Task.LOCATION_LAT, location.getLatitude());
         cv.put(DatabaseSchema.Task.LOCATION_LON, location.getLongitude());
-        cv.put(DatabaseSchema.Task.CATEGORY_ID, category_id);
+        cv.put(DatabaseSchema.Task.CATEGORY_ID, getCategory_id());
         cv.put(DatabaseSchema.Task.USER_ID, user_id);
         cv.put(DatabaseSchema.Task.IMAGE_URL, imageUrl);
         cv.put(DatabaseSchema.Task.IMAGE_STATUS, imageDownloadState.name());
         return cv;
+    }
+
+    public Map<String, Object> getMapData(){
+        Map<String, Object> map = new HashMap<>();
+        map.put(DatabaseSchema.Task.ID, getId());
+        map.put(DatabaseSchema.Task.NAME, getName());
+        map.put("sub_task", getSubTasks());
+        map.put(DatabaseSchema.Task.DESC, getDescription());
+        map.put(DatabaseSchema.Task.EXP_DATE, expireDate.getTime());
+        map.put(DatabaseSchema.Task.LOCATION_LAT, location.getLatitude());
+        map.put(DatabaseSchema.Task.LOCATION_LON, location.getLongitude());
+        map.put(DatabaseSchema.Task.USER_ID, getUser_id());
+        map.put(DatabaseSchema.Task.IMAGE_URL, getImageUrl());
+        map.put(DatabaseSchema.Task.IMAGE_STATUS, getImageDownloadState().name());
+        return map;
     }
 }

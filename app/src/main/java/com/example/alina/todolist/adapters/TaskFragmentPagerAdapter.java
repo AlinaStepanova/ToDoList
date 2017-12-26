@@ -11,6 +11,7 @@ import com.example.alina.todolist.ui.fragment.TaskListFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Leonid on 27.11.2017.
@@ -22,13 +23,13 @@ public class TaskFragmentPagerAdapter extends FragmentStatePagerAdapter {
     private Context context;
 
     public TaskFragmentPagerAdapter(Context context, FragmentManager fragmentManager,
-                                     ArrayList<Task> tasks) {
+                                     List<Task> tasks) {
         super(fragmentManager);
         this.context = context;
         splitTasksByStatus(tasks);
     }
 
-    private void splitTasksByStatus(ArrayList<Task> tasks) {
+    private void splitTasksByStatus(List<Task> tasks) {
         for (int i = 0; i < TaskState.values().length; i++) {
             splitTasks.put(TaskState.values()[i], new ArrayList<Task>());
         }

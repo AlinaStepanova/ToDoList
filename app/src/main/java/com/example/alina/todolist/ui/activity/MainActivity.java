@@ -3,29 +3,33 @@ package com.example.alina.todolist.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.Toast;
 
+import com.example.alina.todolist.AppMain;
 import com.example.alina.todolist.R;
 import com.example.alina.todolist.adapters.TaskFragmentPagerAdapter;
-import com.example.alina.todolist.data.FileDataSource;
-import com.example.alina.todolist.data.IDataSource;
+import com.example.alina.todolist.data.repository.DatabaseSource;
+import com.example.alina.todolist.data.db.DataLoadCallback;
 import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
-import com.example.alina.todolist.ui.fragment.TaskListFragment;
 import com.example.alina.todolist.listeners.OnDataChangedListener;
+import com.example.alina.todolist.ui.fragment.TaskListFragment;
+
+import java.util.List;
 
 public class MainActivity extends BaseActivity implements TaskListFragment.TaskFragmentCallback, OnDataChangedListener{
 
     private FloatingActionButton createTaskButton;
-    private IDataSource dataSource;
+//    private IDataSource dataSource;
     private TabLayout mainTabLayout;
     private ViewPager mainViewPager;
     private TaskFragmentPagerAdapter taskFragmentAdapter;
+    private DatabaseSource helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,8 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
 
         initCreateTaskButton();
 
-        dataSource = new FileDataSource(this, this);
+//        dataSource = new FileDataSource(this, this);
+        helper = new DatabaseSource(this);
 
         initViewPager();
     }
@@ -42,9 +47,9 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
     @Override
     protected void onResume() {
         super.onResume();
-        int size = (dataSource.getTaskList() == null) ? 0 : dataSource.getTaskList().size();
-        Toast.makeText(this, String.format("%d task%s", size, size > 0 ? "s" : ""),
-                Toast.LENGTH_SHORT).show();
+//        int size = (dataSource.getTaskList() == null) ? 0 : dataSource.getTaskList().size();
+//        Toast.makeText(this, String.format("%d task%s", size, size > 0 ? "s" : ""),
+//                Toast.LENGTH_SHORT).show();
     }
 
     private void initCreateTaskButton() {
@@ -62,19 +67,41 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
     }
 
     private void initViewPager(){
-        taskFragmentAdapter = new TaskFragmentPagerAdapter(this, getSupportFragmentManager(), dataSource.getTaskList());
+        helper.getAllTask(new DataLoadCallback<List<Task>>() {
+            @Override
+            public void onSuccess(@Nullable List<Task> data) {
+                if (data != null && !data.isEmpty()){
+                    taskFragmentAdapter = new TaskFragmentPagerAdapter(MainActivity.this, getSupportFragmentManager(), data);
+                    mainTabLayout = (TabLayout) findViewById(R.id.mainTabLayout);
+                    mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
+                    mainTabLayout.setupWithViewPager(mainViewPager);
+                    mainViewPager.setAdapter(taskFragmentAdapter);
+                }
+            }
+        }, getSupportLoaderManager());
+        /*taskFragmentAdapter = new TaskFragmentPagerAdapter(this, getSupportFragmentManager(), dataSource.getTaskList());
         mainTabLayout = (TabLayout) findViewById(R.id.mainTabLayout);
         mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
         mainTabLayout.setupWithViewPager(mainViewPager);
-        mainViewPager.setAdapter(taskFragmentAdapter);
+        mainViewPager.setAdapter(taskFragmentAdapter);*/
     }
 
     private void forceInitPager(){
-        int lastTabPosition = mainTabLayout.getSelectedTabPosition();
-        taskFragmentAdapter = new TaskFragmentPagerAdapter(this, getSupportFragmentManager(), dataSource.getTaskList());
+//        int lastTabPosition = mainTabLayout.getSelectedTabPosition();
+        helper.getAllTask(new DataLoadCallback<List<Task>>() {
+            @Override
+            public void onSuccess(@Nullable List<Task> data) {
+                int lastTabPosition = mainTabLayout.getSelectedTabPosition();
+                taskFragmentAdapter = new TaskFragmentPagerAdapter(MainActivity.this, getSupportFragmentManager(), data);
+                mainViewPager.setAdapter(taskFragmentAdapter);
+                mainTabLayout.setScrollPosition(lastTabPosition, 0, false);
+                mainViewPager.setCurrentItem(lastTabPosition);
+            }
+        }, getSupportLoaderManager());
+        /*taskFragmentAdapter = new TaskFragmentPagerAdapter(this, getSupportFragmentManager(), dataSource.getTaskList());
         mainViewPager.setAdapter(taskFragmentAdapter);
         mainTabLayout.setScrollPosition(lastTabPosition, 0, false);
-        mainViewPager.setCurrentItem(lastTabPosition);
+        mainViewPager.setCurrentItem(lastTabPosition);*/
     }
 
     @Override
@@ -83,7 +110,9 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
             if (resultCode == Activity.RESULT_OK) {
                 Task task = data.getParcelableExtra(BundleKey.TASK.name());
                 if (task != null) {
-                    dataSource.createTask(task);
+//                    dataSource.createTask(task);
+                    helper.createTask(task);
+                    AppMain.getRepository().createNewTask(task);
                     forceInitPager();
                 }
             }
@@ -91,7 +120,9 @@ public class MainActivity extends BaseActivity implements TaskListFragment.TaskF
             if (resultCode == RESULT_OK){
                 Task task = data.getParcelableExtra(BundleKey.TASK.name());
                 if (task != null){
-                    dataSource.updateTask(task);
+//                    dataSource.updateTask(task);
+//                    helper.updateTask(task);
+                    AppMain.getRepository().updateTask(task);
                     forceInitPager();
                 }
             }

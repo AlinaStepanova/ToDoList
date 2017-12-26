@@ -15,11 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.alina.todolist.ui.activity.LoginActivity;
 import com.example.alina.todolist.R;
+import com.example.alina.todolist.data.repository.DatabaseSource;
 import com.example.alina.todolist.entities.User;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +40,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
     private Button buttonReg, buttonLog;
     private View viewFrag, viewInclude;
     private int userCount;
+    private DatabaseSource helper;
 
     @Override
     public void onAttach(Context context) {
@@ -59,6 +59,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
         viewFrag = inflater.inflate(R.layout.fragment_login, container, false);
         userCount = -1;
         initUI();
+
+        helper = new DatabaseSource(getContext());
+
         return viewFrag;
     }
 
@@ -87,11 +90,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.buttonUserLogin:
-                if(checkData()){
-                    regListener.needRegistration(false, userCount);
-                } else{
-                    Toast.makeText(getActivity(), "Wrong email or password", Toast.LENGTH_SHORT).show();
-                }
+                onLoginClick();
                 break;
             case R.id.buttonUserRegistration:
                 regListener.needRegistration(true, userCount);
@@ -101,7 +100,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
         }
     }
 
-    private boolean checkData() {
+    private void onLoginClick(){
+        String userEmail = email.getText().toString().trim();
+        if (validateEmail(userEmail)) {
+            String userPass = numbOne.getText().toString() + numbTwo.getText().toString()
+                    + numbThree.getText().toString() + numbFour.getText().toString();
+
+            User user = helper.getExistsUser(userEmail, userPass);
+            if (user != null) {
+                userCount = user.getId();
+                regListener.needRegistration(false, userCount);
+            } else
+                Toast.makeText(getActivity(), "User doe's not exists", Toast.LENGTH_SHORT).show();
+        } else Toast.makeText(getActivity(), "Wrong email", Toast.LENGTH_SHORT).show();
+    }
+
+/*    private boolean checkData() {
         boolean result = false;
         String userEmail = email.getText().toString().trim();
         String userPass = numbOne.getText().toString()+numbTwo.getText().toString()
@@ -118,7 +132,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
             }
         }
         return result && validateEmail(userEmail);
-    }
+    }*/
 
     private boolean validateEmail(String email){
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
