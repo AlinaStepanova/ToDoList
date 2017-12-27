@@ -7,22 +7,23 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.example.alina.todolist.entities.Task;
+import com.example.alina.todolist.entities.User;
 import com.example.alina.todolist.enums.Constants;
 import com.example.alina.todolist.enums.LoadersId;
 
 import java.util.ArrayList;
 
-public class LoadTasks implements LoaderManager.LoaderCallbacks<Cursor> {
+
+public class LoadUsers implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private final Context context;
 
     private final LoaderManager loaderManager;
 
-    private OnEntitiesLoad<Task> onTaskLoad;
+    private OnEntitiesLoad<User> onUserLoad;
 
-    public LoadTasks(final Context context,
-                     final LoaderManager loaderManager) {
+    public LoadUsers(final Context context,
+                    final LoaderManager loaderManager) {
         this.context = context;
         this.loaderManager = loaderManager;
     }
@@ -36,21 +37,16 @@ public class LoadTasks implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
-        try {
-            ArrayList<Task> tasks = new ArrayList<>();
-            if ((data != null) && data.moveToFirst()) {
-                do {
-                    Task task = new Task();
-                    task.initByCursor(data);
-                    tasks.add(task);
-                } while (data.moveToNext());
-            }
-            onTaskLoad.onSuccess(tasks);
-        } finally {
-            if (data != null) {
-                data.close();
-            }
+        ArrayList<User> users = new ArrayList<>();
+        if (data != null && data.moveToFirst()) {
+            do {
+                users.clear();
+                User user = new User();
+                user.initByCursor(data);
+                users.add(user);
+            } while (data.moveToNext());
         }
+        onUserLoad.onSuccess(users);
     }
 
     @Override
@@ -58,12 +54,12 @@ public class LoadTasks implements LoaderManager.LoaderCallbacks<Cursor> {
 
     }
 
-    public void loadTasks(OnEntitiesLoad<Task> onTaskLoad, Bundle args) {
-        this.onTaskLoad = onTaskLoad;
-        if(loaderManager.getLoader(LoadersId.TASKS_LOADER_ID.ordinal()) != null) {
-            loaderManager.initLoader(LoadersId.TASKS_LOADER_ID.ordinal(), args, this);
+    public void loadUsers(OnEntitiesLoad<User> onUserLoad, Bundle args) {
+        this.onUserLoad = onUserLoad;
+        if(loaderManager.getLoader(LoadersId.USER_LOADER_ID.ordinal()) != null) {
+            loaderManager.initLoader(LoadersId.USER_LOADER_ID.ordinal(), args, this);
         } else {
-            loaderManager.restartLoader(LoadersId.TASKS_LOADER_ID.ordinal(), args, this);
+            loaderManager.restartLoader(LoadersId.USER_LOADER_ID.ordinal(), args, this);
         }
     }
 

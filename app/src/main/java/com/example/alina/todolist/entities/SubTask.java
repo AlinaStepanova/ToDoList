@@ -13,7 +13,7 @@ import com.example.alina.todolist.data.database.DataBaseManager;
 public class SubTask extends TaskObject {
 
     private int id;
-    private int idTask;
+    private int taskId;
     public SubTask() {
         super();
     }
@@ -21,13 +21,14 @@ public class SubTask extends TaskObject {
     protected SubTask(Parcel in) {
         super(in);
         this.id = in.readInt();
-        this.id = in.readInt();
+        this.taskId = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeInt(this.id);
+        dest.writeInt(this.taskId);
     }
 
     public static final Creator<SubTask> CREATOR = new Creator<SubTask>() {
@@ -46,15 +47,17 @@ public class SubTask extends TaskObject {
     public void initByCursor(Cursor cursor) {
         this.setDescription(cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_SUBTASK_DESCRIPTION)));
         this.id = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_SUBTASK_ID_NAME));
+        this.taskId = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_SUBTASK_TASK_ID));
         this.setStatus(TaskStatus.valueOf(cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_SUBTASK_STATUS))));
+        this.setUuid(cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_SUBTASK_UUID)));
     }
 
     @Override
     public ContentValues toContentValues() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DataBaseManager.COLUMN_SUBTASK_DESCRIPTION, this.getDescription());
-        contentValues.put(DataBaseManager.COLUMN_SUBTASK_ID_NAME, this.id);
         contentValues.put(DataBaseManager.COLUMN_SUBTASK_STATUS, this.getStatus().name());
+        contentValues.put(DataBaseManager.COLUMN_SUBTASK_UUID, this.getUuid());
         return null;
     }
 }

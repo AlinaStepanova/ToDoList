@@ -136,7 +136,6 @@ public class User implements Parcelable, DataBaseContract {
     @Override
     public ContentValues toContentValues() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DataBaseManager.COLUMN_USER_ID_NAME,this.id);
         contentValues.put(DataBaseManager.COLUMN_USER_NAME, this.name);
         contentValues.put(DataBaseManager.COLUMN_USER_EMAIL, this.email);
         contentValues.put(DataBaseManager.COLUMN_USER_PIN, this.pin);

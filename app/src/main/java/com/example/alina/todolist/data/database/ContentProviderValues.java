@@ -5,7 +5,7 @@ import android.net.Uri;
 
 public class ContentProviderValues {
 
-    private static final String AUTHORITY = "com.example.volodymyrstelmashchuk.studcontentprovider";
+    private static final String AUTHORITY = "com.example.alina.todolist";
 
     public static final Uri TASKS_CONTENT_URI =
             Uri.parse("content://" + AUTHORITY + "/" + DataBaseManager.TASK_TABLE_NAME);

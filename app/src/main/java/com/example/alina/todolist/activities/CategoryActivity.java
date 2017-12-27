@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.adapters.CategoryAdapter;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.data.SharedPreferencesDataSource;
@@ -23,7 +24,7 @@ import com.example.alina.todolist.listeners.OnDataChangedListener;
 
 import java.util.List;
 
-public class CategoryActivity extends BaseTimerActivity implements SearchView.OnQueryTextListener,
+public class CategoryActivity extends BaseLocationActivity implements SearchView.OnQueryTextListener,
         OnCategoryClickListener, OnDataChangedListener {
 
     public static Intent launchInEditMode(Context context){

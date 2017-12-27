@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,11 +10,11 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.adapters.TaskFragmentPagerAdapter;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.data.SharedPreferencesDataSource;
@@ -22,10 +22,11 @@ import com.example.alina.todolist.entities.Task;
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.fragments.TaskListFragment;
+import com.example.alina.todolist.listeners.OnDataChangedListener;
 import com.example.alina.todolist.listeners.OnTaskClickListener;
-import com.example.alina.todolist.maps.GPSTracker;
 
-public class MainActivity extends BaseTimerActivity implements OnTaskClickListener,TaskListFragment.TaskFragmentCallback{
+public class MainActivity extends BaseLocationActivity implements
+        TaskListFragment.TaskFragmentCallback, OnDataChangedListener, OnTaskClickListener {
 
     private FloatingActionButton createTaskButton;
     private IDataSource dataSource;
@@ -41,7 +42,6 @@ public class MainActivity extends BaseTimerActivity implements OnTaskClickListen
         initCreateTaskButton();
 
         dataSource = new SharedPreferencesDataSource(this);
-        Log.d("TAG","in main "+ dataSource.getCurrentUser().getName());
         initViewPager();
     }
 
@@ -55,13 +55,14 @@ public class MainActivity extends BaseTimerActivity implements OnTaskClickListen
 
     private void initCreateTaskButton() {
 
-        createTaskButton = (FloatingActionButton) findViewById(R.id.createTaskButton);
+        createTaskButton = findViewById(R.id.createTaskButton);
         createTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Task task = new Task();
                 Intent intent = new Intent(MainActivity.this, CreateTaskActivity.class);
                 intent.putExtra(BundleKey.TASK.name(), task);
+                setNeedCheckCurrentTime(false);
                 startActivityForResult(intent, ActivityRequest.CREATE_TASK.ordinal());
             }
         });
@@ -69,8 +70,8 @@ public class MainActivity extends BaseTimerActivity implements OnTaskClickListen
 
     private void initViewPager(){
         taskFragmentAdapter = new TaskFragmentPagerAdapter(this, getSupportFragmentManager(), dataSource.getTaskList());
-        mainTabLayout = (TabLayout) findViewById(R.id.mainTabLayout);
-        mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
+        mainTabLayout = findViewById(R.id.mainTabLayout);
+        mainViewPager = findViewById(R.id.mainViewPager);
         mainTabLayout.setupWithViewPager(mainViewPager);
         mainViewPager.setAdapter(taskFragmentAdapter);
     }
@@ -117,7 +118,6 @@ public class MainActivity extends BaseTimerActivity implements OnTaskClickListen
                 startActivityForResult(new Intent(this, CategoryActivity.class), ActivityRequest.WATCH_CATEGORY.ordinal());
                 break;
             case R.id.log_out:
-                //dataSource.setCurrentUser(new User());
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
                 break;
@@ -131,6 +131,7 @@ public class MainActivity extends BaseTimerActivity implements OnTaskClickListen
     public void onButtonEditClick(Task task) {
         Intent intent = new Intent(this, CreateTaskActivity.class);
         intent.putExtra(BundleKey.TASK.name(), task);
+        setNeedCheckCurrentTime(false);
         startActivityForResult(intent, ActivityRequest.UPDATE_TASK.ordinal());
     }
 
@@ -138,14 +139,19 @@ public class MainActivity extends BaseTimerActivity implements OnTaskClickListen
     public void onItemClick(Task task) {
         Intent intent = new Intent(this, TaskActivity.class);
         intent.putExtra(BundleKey.TASK.name(), task);
+        setNeedCheckCurrentTime(false);
         startActivityForResult(intent, ActivityRequest.WATCH_TASK.ordinal());
-
     }
 
 
     @Override
     public void onItemLongClick(Task task) {
 
+    }
+
+    @Override
+    public void notifyDataChanged() {
+        forceInitPager();
     }
 
     @Override

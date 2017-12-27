@@ -9,18 +9,18 @@ import android.support.v4.content.Loader;
 
 import com.example.alina.todolist.entities.SubTask;
 import com.example.alina.todolist.enums.Constants;
+import com.example.alina.todolist.enums.LoadersId;
 
 import java.util.ArrayList;
 
 
 public class LoadSubTasks implements LoaderManager.LoaderCallbacks<Cursor>{
-    private static final int LOADER_ID = 3;
 
     private final Context context;
 
     private final LoaderManager loaderManager;
 
-    private LoadSubTasks.OnSubTaskLoad onSubTaskLoad;
+    private OnEntitiesLoad<SubTask> onSubTaskLoad;
 
     public LoadSubTasks(final Context context,
                      final LoaderManager loaderManager) {
@@ -31,7 +31,8 @@ public class LoadSubTasks implements LoaderManager.LoaderCallbacks<Cursor>{
     @Override
     public CursorLoader onCreateLoader(final int id, final Bundle args) {
         return new CursorLoader(context, ContentProviderValues.TASKS_CONTENT_URI,
-                args.getStringArray(Constants.KEY_PROJECTION), args.getString(Constants.KEY_SELECTION),
+                args.getStringArray(Constants.KEY_PROJECTION),
+                args.getString(Constants.KEY_SELECTION),
                 args.getStringArray(Constants.KEY_SELECTION_ARGS), args.getString(Constants.KEY_SORT_ORDER));
     }
 
@@ -59,13 +60,13 @@ public class LoadSubTasks implements LoaderManager.LoaderCallbacks<Cursor>{
 
     }
 
-    interface OnSubTaskLoad {
-        void onSuccess(ArrayList<SubTask> subTasks);
-    }
-
-    public void loadTasks(LoadSubTasks.OnSubTaskLoad onSubTaskLoad) {
+    public void loadSubtasks(OnEntitiesLoad<SubTask> onSubTaskLoad, Bundle args) {
         this.onSubTaskLoad = onSubTaskLoad;
-        loaderManager.initLoader(LOADER_ID, new Bundle(), this);
+        if(loaderManager.getLoader(LoadersId.SUBTASKS_LOADER_ID.ordinal()) != null) {
+            loaderManager.initLoader(LoadersId.SUBTASKS_LOADER_ID.ordinal(), args, this);
+        } else {
+            loaderManager.restartLoader(LoadersId.SUBTASKS_LOADER_ID.ordinal(), args, this);
+        }
     }
 
 }

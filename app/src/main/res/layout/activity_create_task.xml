@@ -132,8 +132,21 @@
                         android:hint="@string/longitude"
                         android:inputType="numberDecimal"
                         android:maxLength="@integer/max_length" />
+
+
                 </android.support.design.widget.TextInputLayout>
 
+                <Button
+                    android:id="@+id/makePhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Make a photo" />
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/taskPhoto"/>
 
             </LinearLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -148,6 +161,7 @@
             android:id="@+id/subTaskRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton

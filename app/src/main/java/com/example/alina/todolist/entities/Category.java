@@ -11,15 +11,12 @@ import com.example.alina.todolist.data.database.DataBaseManager;
 
 import java.util.Random;
 
-/**
- * Created by gromi on 11/22/2017.
- */
-
 public class Category implements Parcelable, DataBaseContract {
 
     private String name;
     private int color;
-    private long id;
+    private int id;
+    private int userId;
 
     public Category(){
 
@@ -30,13 +27,15 @@ public class Category implements Parcelable, DataBaseContract {
         Random random = new Random();
         this.color = Color.argb(255, random.nextInt(256), random.nextInt(256),
                 random.nextInt(256));
-        this.id = System.nanoTime();
+//        this.id = System.nanoTime();
+        this.id = random.nextInt(10000);
     }
 
     protected Category(Parcel in){
         this.name = in.readString();
         this.color = in.readInt();
-        this.id = in.readLong();
+        this.id = in.readInt();
+        this.userId = in.readInt();
     }
 
     public static final Creator<Category> CREATOR = new Creator<Category>() {
@@ -61,6 +60,7 @@ public class Category implements Parcelable, DataBaseContract {
         parcel.writeString(this.name);
         parcel.writeInt(this.color);
         parcel.writeLong(this.id);
+        parcel.writeInt(this.userId);
     }
 
     public String getName() {
@@ -75,7 +75,7 @@ public class Category implements Parcelable, DataBaseContract {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -102,15 +102,16 @@ public class Category implements Parcelable, DataBaseContract {
 
     @Override
     public void initByCursor(Cursor cursor) {
-        this.id = cursor.getLong(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_ID_NAME));
+        this.id = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_ID_NAME));
         this.name = cursor.getString(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_NAME));
         this.color = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_COLOR));
+        this.userId = cursor.getInt(cursor.getColumnIndex(DataBaseManager.COLUMN_CATEGORY_USER_ID));
     }
 
     @Override
     public ContentValues toContentValues() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DataBaseManager.COLUMN_CATEGORY_ID_NAME, this.id);
+//        contentValues.put(DataBaseManager.COLUMN_CATEGORY_ID_NAME, this.id);
 
         contentValues.put(DataBaseManager.COLUMN_CATEGORY_NAME, this.name);
         contentValues.put(DataBaseManager.COLUMN_CATEGORY_COLOR, this.color);

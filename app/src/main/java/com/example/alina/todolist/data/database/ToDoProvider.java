@@ -25,7 +25,7 @@ public class ToDoProvider extends ContentProvider {
             sortOrder = DataBaseManager.COLUMN_TASK_ID_NAME;
         }
 
-        String tableName = "";
+        String tableName;
         Uri contentProviderValue = null;
         switch (ContentProviderValues.uriMatcher.match(uri)) {
             case ContentProviderValues.URI_ALL_TASKS:
@@ -284,7 +284,7 @@ public class ToDoProvider extends ContentProvider {
                 type = ContentProviderValues.TYPE_CONTENT_SUBTASK_MANY;
                 break;
             case ContentProviderValues.URI_SINGLE_SUBTASKS_BY_ID:
-                type = ContentProviderValues.TYPE_CONTENT_SUBTASK_MANY;
+                type = ContentProviderValues.TYPE_CONTENT_SUBTASK_SINGLE;
                 break;
         }
         return type;

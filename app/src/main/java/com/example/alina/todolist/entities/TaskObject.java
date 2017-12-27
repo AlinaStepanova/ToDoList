@@ -7,9 +7,6 @@ import com.example.alina.todolist.data.database.DataBaseContract;
 
 import java.util.UUID;
 
-/**
- * Created by Alina on 02.11.2017.
- */
 
 public abstract class TaskObject implements Parcelable, DataBaseContract {
 

@@ -9,18 +9,22 @@
 
     <EditText
         android:id="@+id/regFirstNumber"
-        style="@style/EditForPin" />
+        style="@style/EditForPin"
+        android:text="1"/>
 
     <EditText
         android:id="@+id/regSecondNumber"
-        style="@style/EditForPin"/>
+        style="@style/EditForPin"
+        android:text="1"/>
 
     <EditText
         android:id="@+id/regThirdNumber"
-        style="@style/EditForPin"/>
+        style="@style/EditForPin"
+        android:text="1"/>
 
     <EditText
         android:id="@+id/regFourthNumber"
-        style="@style/EditForPin" />
+        style="@style/EditForPin"
+        android:text="1"/>
 
 </LinearLayout>

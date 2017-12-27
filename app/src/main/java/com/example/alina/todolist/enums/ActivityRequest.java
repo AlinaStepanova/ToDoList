@@ -13,4 +13,6 @@ public enum ActivityRequest {
     EDIT_TASK,
     CHECK_PASSWORD,
     WATCH_TASK,
+    REQUEST_CODE_CAMERA,
+
 }

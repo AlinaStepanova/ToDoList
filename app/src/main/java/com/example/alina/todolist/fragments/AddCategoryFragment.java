@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.alina.todolist.CategoryActivity;
+import com.example.alina.todolist.activities.CategoryActivity;
 import com.example.alina.todolist.R;
 import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.validators.Validator;

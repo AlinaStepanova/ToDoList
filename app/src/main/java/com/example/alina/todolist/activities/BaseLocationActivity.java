@@ -1,29 +1,30 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.enums.Constants;
-import com.example.alina.todolist.maps.GPSTracker;
 
-public abstract class BaseLocationActivity extends AppCompatActivity {
+public abstract class BaseLocationActivity extends BaseTimerActivity {
 
-    private double lat;
-    private double lon;
+    private Location location;
     private BroadcastReceiver listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startService(new Intent(this, GPSTracker.class));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -36,13 +37,13 @@ public abstract class BaseLocationActivity extends AppCompatActivity {
         listener = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                lat = intent.getDoubleExtra(Constants.LATITUDE, 0);
-                lon = intent.getDoubleExtra(Constants.LONGITUDE, 0);
-                Log.d("LBR", lat+" "+lon);
+
+                location = intent.getParcelableExtra(BundleKey.CURRENT_LOCATION.name());
+                Log.d("LBR", location.getLatitude() + " " + location.getLongitude());
             }
         };
         LocalBroadcastManager.getInstance(this).registerReceiver(listener,
-                new IntentFilter(Constants.LOCAL_BROADCAST_LOCATION));
+                new IntentFilter(Constants.ACTION_LOCAL_BROADCAST_LOCATION));
     }
 
     @Override
@@ -50,4 +51,6 @@ public abstract class BaseLocationActivity extends AppCompatActivity {
         super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(listener);
     }
+
+    //protected abstract View getActivityContentViewId();
 }

@@ -1,7 +1,7 @@
 package com.example.alina.todolist.maps;
 
 import android.Manifest;
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,34 +9,46 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.example.alina.todolist.enums.BundleKey;
 import com.example.alina.todolist.enums.Constants;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class GPSTracker extends IntentService implements LocationListener {
+public class GPSTracker extends Service implements LocationListener {
 
     private LocationManager locationManager;
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
     private Location currentLocation;
-    private double latitude;
-    private double longitude;
+    private static final String GPS_NETWORK_IS_NOT_ENABLED = "GPS and network is not enabled";
 
 
     public GPSTracker() {
-        super(GPSTracker.class.getName());
+        super();
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d("Location_", "onCreate");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("Location_", "onStartCommand");
+        if (checkSelfPermission()) {
+            Log.d("Location_", "permission denied");
+        } else {
+            findLocation();
+
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private boolean checkSelfPermission() {
@@ -46,54 +58,39 @@ public class GPSTracker extends IntentService implements LocationListener {
                 != PackageManager.PERMISSION_GRANTED);
     }
 
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        if (checkSelfPermission()) {
-            Log.d("Location_", "permission denied");
-        } else {
-            getLocation();
-            sendData();
-        }
-    }
 
     private void sendData() {
-        Intent intent = new Intent(Constants.LOCAL_BROADCAST_LOCATION);
-        intent.putExtra(Constants.LATITUDE, getLatitude());
-        intent.putExtra(Constants.LONGITUDE, getLongitude());
+        Intent intent = new Intent(Constants.ACTION_LOCAL_BROADCAST_LOCATION);
+        intent.putExtra(BundleKey.CURRENT_LOCATION.name(), currentLocation);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     @RequiresPermission(allOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
-    public void getLocation() {
+    public void findLocation() {
         if (checkSelfPermission()) {
             Log.d("Location_", "permission denied in Location");
         }
-        try {
-            String provider = null;
+        String provider = null;
 
-            locationManager = (LocationManager) getApplicationContext()
-                    .getSystemService(LOCATION_SERVICE);
+        locationManager = (LocationManager) getApplicationContext()
+                .getSystemService(LOCATION_SERVICE);
 
-            isGPSEnabled = locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isGPSEnabled = locationManager
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            isNetworkEnabled = locationManager
-                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        isNetworkEnabled = locationManager
+                .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-            if (!isGPSEnabled && !isNetworkEnabled) {
-                Log.d("Location_", "gps and net is not enabled");
-            } else {
-                if (isNetworkEnabled) {
-                    provider = LocationManager.NETWORK_PROVIDER;
-                }
-                if (isGPSEnabled) {
-                    provider = LocationManager.GPS_PROVIDER;
-                }
-                getLocationFromProvider(provider);
+        if (!isGPSEnabled && !isNetworkEnabled) {
+            Log.d("Location_", "gps and net is not enabled");
+        } else {
+            if (isNetworkEnabled) {
+                provider = LocationManager.NETWORK_PROVIDER;
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (isGPSEnabled) {
+                provider = LocationManager.GPS_PROVIDER;
+            }
+            getLocationFromProvider(provider);
         }
     }
 
@@ -109,29 +106,10 @@ public class GPSTracker extends IntentService implements LocationListener {
                 if (locationManager != null) {
                     currentLocation = locationManager
                             .getLastKnownLocation(provider);
-                    if (currentLocation != null) {
-                        latitude = currentLocation.getLatitude();
-                        longitude = currentLocation.getLongitude();
-                    }
                 }
             }
         }
     }
-
-    private double getLatitude() {
-        if (currentLocation != null) {
-            latitude = currentLocation.getLatitude();
-        }
-        return latitude;
-    }
-
-    private double getLongitude() {
-        if (currentLocation != null) {
-            longitude = currentLocation.getLongitude();
-        }
-        return longitude;
-    }
-
 
 
     @Override
@@ -140,12 +118,13 @@ public class GPSTracker extends IntentService implements LocationListener {
         if (checkSelfPermission()) {
             Log.d("Location_", "permission denied");
         } else {
-            Log.d("Location_", latitude+" "+longitude);
-            Log.d("Location_", currentLocation.distanceTo(location)+" ");
-
-            if(currentLocation.distanceTo(location) > Constants.MIN_DISTANCE_CHANGE_FOR_UPDATES) {
-                getLocation();
-                sendData();
+            if (currentLocation != null) {
+                Log.d("Location_", currentLocation.distanceTo(location) + " ");
+                Log.d("Location_", currentLocation.getLatitude()+" "+currentLocation.getLongitude());
+                if (currentLocation.distanceTo(location) > Constants.MIN_DISTANCE_CHANGE_FOR_UPDATES) {
+                    findLocation();
+                    sendData();
+                }
             }
         }
     }

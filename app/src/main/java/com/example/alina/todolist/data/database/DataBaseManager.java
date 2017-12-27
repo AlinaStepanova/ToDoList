@@ -16,23 +16,25 @@ public class DataBaseManager extends SQLiteOpenHelper {
 
     public static final String COLUMN_TASK_ID_NAME = "task_id";
     public static final String COLUMN_TASK_USER_ID = "task_user_id";
+    public static final String COLUMN_TASK_UUID = "task_uuid";
     public static final String COLUMN_TASK_DESCRIPTION = "task_description";
     public static final String COLUMN_TASK_STATUS = "task_status";
     public static final String COLUMN_TASK_NAME = "task_name";
-    private static final String COLUMN_TASK_CATEGORY_ID = "task_category_id";
+    public static final String COLUMN_TASK_CATEGORY_ID = "task_category_id";
     public static final String COLUMN_TASK_EXPIRE_DATE = "task_expire_date";
     public static final String COLUMN_TASK_LATITUDE = "task_latitude";
     public static final String COLUMN_TASK_LONGITUDE = "task_longitude";
 
     public static final String COLUMN_CATEGORY_ID_NAME = "category_id";
-    private static final String COLUMN_CATEGORY_USER_ID = "category_user_id";
+    public static final String COLUMN_CATEGORY_USER_ID = "category_user_id";
     public static final String COLUMN_CATEGORY_NAME = "category_name";
     public static final String COLUMN_CATEGORY_COLOR = "category_color";
 
     public static final String COLUMN_SUBTASK_ID_NAME = "subtask_id";
     public static final String COLUMN_SUBTASK_DESCRIPTION = "subtask_description";
+    public static final String COLUMN_SUBTASK_UUID = "subtask_uuid";
     public static final String COLUMN_SUBTASK_STATUS = "subtask_status";
-    private static final String COLUMN_SUBTASK_TASK_ID = "subtask_task_id";
+    public static final String COLUMN_SUBTASK_TASK_ID = "subtask_task_id";
 
     public static final String COLUMN_USER_ID_NAME = "user_id";
     public static final String COLUMN_USER_NAME = "user_name";
@@ -49,11 +51,14 @@ public class DataBaseManager extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE TABLE " + TASK_TABLE_NAME + "("
                 + COLUMN_TASK_ID_NAME + " integer primary key autoincrement,"
                 + COLUMN_TASK_USER_ID + " integer,"
+                + COLUMN_TASK_UUID + " text,"
                 + COLUMN_TASK_DESCRIPTION + " text,"
                 + COLUMN_TASK_STATUS + " text,"
                 + COLUMN_TASK_NAME + " text,"
                 + COLUMN_TASK_CATEGORY_ID + " integer,"
-                + COLUMN_TASK_EXPIRE_DATE + " integer"
+                + COLUMN_TASK_EXPIRE_DATE + " integer,"
+                + COLUMN_TASK_LATITUDE + " real,"
+                + COLUMN_TASK_LONGITUDE + " real"
                 + ");");
 
         sqLiteDatabase.execSQL("CREATE TABLE " + CATEGORY_TABLE_NAME + "("
@@ -66,6 +71,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE TABLE " + SUBTASK_TABLE_NAME + "("
                 + COLUMN_SUBTASK_ID_NAME + " integer primary key autoincrement,"
                 + COLUMN_SUBTASK_DESCRIPTION + " text,"
+                + COLUMN_SUBTASK_UUID + " text,"
                 + COLUMN_SUBTASK_STATUS + " text,"
                 + COLUMN_SUBTASK_TASK_ID + " integer"
                 + ");");
@@ -74,7 +80,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
                 + COLUMN_USER_ID_NAME + " integer primary key autoincrement,"
                 + COLUMN_USER_NAME + " text,"
                 + COLUMN_USER_EMAIL + " text,"
-                + COLUMN_USER_PIN + " integer"
+                + COLUMN_USER_PIN + " text"
                 + ");");
 
     }

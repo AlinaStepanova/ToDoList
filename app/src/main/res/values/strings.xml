@@ -127,4 +127,10 @@
     <string name="no_category_chosen">Choose category</string>
 
     <string name="go_to_category">Go to category</string>
+    <string name="show_on_map">Show on map</string>
+
+    <string name="task_actitity">Open task</string>
+    <string name="map_fragment">Open map</string>
+
+
 </resources>

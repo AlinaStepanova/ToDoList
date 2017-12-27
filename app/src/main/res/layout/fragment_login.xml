@@ -27,7 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:text="qwe@i.ua"/>
         </android.support.design.widget.TextInputLayout>
 
             <include layout="@layout/edit_for_pin_number"

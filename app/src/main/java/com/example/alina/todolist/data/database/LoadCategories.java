@@ -9,18 +9,17 @@ import android.support.v4.content.Loader;
 
 import com.example.alina.todolist.entities.Category;
 import com.example.alina.todolist.enums.Constants;
+import com.example.alina.todolist.enums.LoadersId;
 
 import java.util.ArrayList;
 
 public class LoadCategories implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int LOADER_ID = 2;
-
     private final Context context;
 
     private final LoaderManager loaderManager;
 
-    private OnCategoryLoad onCategoryLoad;
+    private OnEntitiesLoad<Category> onCategoryLoad;
 
     public LoadCategories(final Context context,
                           final LoaderManager loaderManager) {
@@ -31,8 +30,10 @@ public class LoadCategories implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public CursorLoader onCreateLoader(final int id, final Bundle args) {
         return new CursorLoader(context, ContentProviderValues.TASKS_CONTENT_URI,
-                args.getStringArray(Constants.KEY_PROJECTION), args.getString(Constants.KEY_SELECTION),
-                args.getStringArray(Constants.KEY_SELECTION_ARGS), args.getString(Constants.KEY_SORT_ORDER));
+                args.getStringArray(Constants.KEY_PROJECTION),
+                args.getString(Constants.KEY_SELECTION),
+                args.getStringArray(Constants.KEY_SELECTION_ARGS),
+                args.getString(Constants.KEY_SORT_ORDER));
     }
 
     @Override
@@ -59,13 +60,13 @@ public class LoadCategories implements LoaderManager.LoaderCallbacks<Cursor> {
 
     }
 
-    public void loadTasks(LoadCategories.OnCategoryLoad onCategoryLoad) {
+    public void loadCategories(OnEntitiesLoad<Category> onCategoryLoad, Bundle args) {
         this.onCategoryLoad = onCategoryLoad;
-        loaderManager.initLoader(LOADER_ID, new Bundle(), this);
-    }
-
-    interface OnCategoryLoad {
-        void onSuccess(ArrayList<Category> categories);
+        if(loaderManager.getLoader(LoadersId.CATEGORIES_LOADER_ID.ordinal()) != null) {
+            loaderManager.initLoader(LoadersId.CATEGORIES_LOADER_ID.ordinal(), args, this);
+        } else {
+            loaderManager.restartLoader(LoadersId.CATEGORIES_LOADER_ID.ordinal(), args, this);
+        }
     }
 
 }

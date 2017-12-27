@@ -36,11 +36,19 @@
                 android:layout_margin="@dimen/space8"
                 android:layout_gravity="end"
                 android:background="@drawable/sh_square_round_left_corner_black"/>
+
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_task" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragmentMap">
+
+    </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -50,5 +58,7 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@android:drawable/ic_menu_edit" />
+
+
 
 </android.support.design.widget.CoordinatorLayout>

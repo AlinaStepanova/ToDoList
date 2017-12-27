@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.example.alina.todolist.R;
 import com.example.alina.todolist.data.IDataSource;
 import com.example.alina.todolist.data.SharedPreferencesDataSource;
 import com.example.alina.todolist.entities.User;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 
 import static com.example.alina.todolist.enums.BundleKey.NEED_CHECK_PASSWORD;
 
-public class LoginActivity extends BaseTimerActivity implements LoginFragment.NeedRegistrationListener,
+public class LoginActivity extends BaseLocationActivity implements LoginFragment.NeedRegistrationListener,
         UserNameFragment.GetNameFromFragment, UserEmailFragment.GetEmailFromFragment, UserPinFragment.GetPinFromFragment,
         UserWelcomeFragment.RunMainActivity, OnDataChangedListener {
 
@@ -38,11 +39,7 @@ public class LoginActivity extends BaseTimerActivity implements LoginFragment.Ne
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if(checkSelfPermission()){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION},100);
-        }
+
         intent = getIntent();
 
         if (savedInstanceState == null && !intent.getBooleanExtra(NEED_CHECK_PASSWORD.name(), false)) {
@@ -64,8 +61,6 @@ public class LoginActivity extends BaseTimerActivity implements LoginFragment.Ne
 
         dataSource = new SharedPreferencesDataSource(this);
 
-
-        // Log.d("TAG", tracker.getLatitude() + " " + tracker.getLongitude());
     }
 
     private boolean checkSelfPermission(){
@@ -73,6 +68,16 @@ public class LoginActivity extends BaseTimerActivity implements LoginFragment.Ne
                 != PackageManager.PERMISSION_GRANTED || ActivityCompat
                 .checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(checkSelfPermission()){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},100);
+        }
     }
 
 

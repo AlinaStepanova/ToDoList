@@ -5,17 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_task">
+    tools:showIn="@layout/activity_task"
+    android:fillViewport="true">
+
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <Button
+        android:id="@+id/showOnMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/show_on_map" />
+    <Button
+        android:id="@+id/makeNotification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Make notification" />
+    <Button
+        android:id="@+id/removeNotification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remove notification" />
+
     <TextView
         android:id="@+id/descriptionTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+        android:text="@string/task_description"/>
 
     <TextView
         android:id="@+id/latitudeTask"
@@ -26,6 +45,9 @@
         android:id="@+id/longitudeTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+
+
 </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

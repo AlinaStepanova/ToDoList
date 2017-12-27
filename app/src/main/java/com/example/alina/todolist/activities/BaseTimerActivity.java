@@ -1,4 +1,4 @@
-package com.example.alina.todolist;
+package com.example.alina.todolist.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,9 +8,9 @@ import android.util.Log;
 
 import com.example.alina.todolist.enums.ActivityRequest;
 import com.example.alina.todolist.enums.BundleKey;
-import com.example.alina.todolist.validators.Constants;
+import com.example.alina.todolist.enums.Constants;
 
-public abstract class BaseTimerActivity extends BaseLocationActivity {
+public abstract class BaseTimerActivity extends AppCompatActivity {
 
     private long currentTime;
     private boolean needCheckCurrentTime = false;
