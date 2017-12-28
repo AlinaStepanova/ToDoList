@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 
 import com.example.alina.todolist.data.db.DataLoadCallback;
 
@@ -29,15 +28,6 @@ public abstract class BaseLoader<T> implements LoaderManager.LoaderCallbacks<Cur
         this.context = context;
         this.loaderManager = loaderManager;
     }
-
-    @Override
-    public abstract Loader<Cursor> onCreateLoader(int id, Bundle args);
-
-    @Override
-    public abstract void onLoadFinished(Loader loader, Cursor data);
-
-    @Override
-    public abstract void onLoaderReset(Loader loader);
 
     public abstract void loadData(DataLoadCallback<T> callback, Bundle args);
 }

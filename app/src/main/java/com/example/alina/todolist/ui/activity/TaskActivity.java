@@ -140,13 +140,11 @@ public class TaskActivity extends BaseActivity {
                 .addAction(getAction(getString(R.string.open_task), R.drawable.ic_open_task, TaskActivity.class))
                 .addAction(getAction(getString(R.string.open_map), R.drawable.ic_map, MapsActivity.class))
                 .build();
-        // TODO: set task id instead hardcode
-        NotificationManagerCompat.from(this).notify(0,notification);
+        NotificationManagerCompat.from(this).notify(task.getId(),notification);
     }
 
     private void removeNotificationClick(){
-        // TODO: close by task id
-        NotificationManagerCompat.from(this).cancel(0);
+        NotificationManagerCompat.from(this).cancel(task.getId());
     }
 
     private NotificationCompat.Action getAction(String actionName, @DrawableRes int icon, Class openActivity){

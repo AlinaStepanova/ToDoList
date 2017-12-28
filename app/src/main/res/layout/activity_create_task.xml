@@ -37,6 +37,7 @@
                         android:id="@+id/nameEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
                         android:hint="@string/task_name"
                         android:inputType="textPersonName"
                         android:maxLength="128"/>
@@ -56,8 +57,9 @@
                         android:id="@+id/descriptionText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:imeOptions="actionDone"
                         android:hint="@string/task_description"
-                        android:inputType="textMultiLine"
                         android:maxLength="@integer/max_length"/>
                 </android.support.design.widget.TextInputLayout>
 

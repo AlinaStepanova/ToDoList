@@ -18,10 +18,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,6 +49,9 @@ import com.example.alina.todolist.validators.Constants;
 import com.example.alina.todolist.validators.Validator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
@@ -80,6 +85,21 @@ public class CreateTaskActivity extends BaseActivity implements
             .setNotEmpty()
             .setMinLength(3)
             .build();
+    private ValueEventListener taskDataChangeListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            Task task = dataSnapshot.getValue(Task.class);
+            if (task != null) {
+                nameEditText.setText(task.getName());
+                descriptionEditText.setText(task.getDescription());
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +133,35 @@ public class CreateTaskActivity extends BaseActivity implements
         longitudeEditText = findViewById(R.id.longitudeEditText);
         openCameraButton = findViewById(R.id.openCameraButton);
         taskImage = findViewById(R.id.taskImage);
+        initEditorActions();
+    }
+
+
+    private void initEditorActions(){
+        nameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    FirebaseFileHelper.updateTaskName(task.getId(), nameEditText.getText().toString()   );
+                    return true;
+                }
+                return false;
+            }
+        });
+        descriptionEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    FirebaseFileHelper.updateTaskDescription(task.getId(), descriptionEditText.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void setData() {
+        FirebaseFileHelper.getTaskQuery(4).addValueEventListener(taskDataChangeListener);
         nameEditText.setText(task.getName());
         descriptionEditText.setText(task.getDescription());
         dateTextView.setText(task.getExpireDateString());
@@ -124,6 +170,12 @@ public class CreateTaskActivity extends BaseActivity implements
             longitudeEditText.setText(String.valueOf(task.getLocation().getLongitude()));
         }
         showTaskImage();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        FirebaseFileHelper.getTaskQuery(4).removeEventListener(taskDataChangeListener);
     }
 
     private void showTaskImage() {

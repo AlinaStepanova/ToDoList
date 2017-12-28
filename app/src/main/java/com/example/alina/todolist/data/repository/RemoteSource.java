@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RemoteSource implements IRepositorySource{
-    private static final String CHILD_TASK = "TASKS";
+    private static final String CHILD_TASK = "Task";
     private static final String CHILD_SUB_TASK = "Sub_task";
     private static final String CHILD_CATEGORY = "Category";
 
